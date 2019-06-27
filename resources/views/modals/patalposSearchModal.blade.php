@@ -60,7 +60,7 @@
                                 {{ Form::label('pertvaros', 'Patalpos dalių sk') }}<br/>
                             </div>
                             <div class="col-md-6 text-left">
-                                {{ Form::number('pertvaros', '',  ['min'=>1,'max'=>16, 'class' => 'form-control', 'placeholder' => 'Kiekis', 'style' => 'width:50%;']) }}<br/>
+                                {{ Form::number('pertvaros', '',  ['min'=>0,'max'=>16, 'class' => 'form-control', 'placeholder' => 'Kiekis', 'style' => 'width:50%;']) }}<br/>
                             </div>
                         </div>
                     </div>

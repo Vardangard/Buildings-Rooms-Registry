@@ -94,6 +94,8 @@ return [
 
     'passwords' => [
         'users' => [
+            'driver' => 'oracle',
+            'model' => App\User::class,
             'provider' => 'users',
             'table' => 'password_resets',
             'expire' => 60,

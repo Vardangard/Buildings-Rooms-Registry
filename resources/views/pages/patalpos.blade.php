@@ -61,7 +61,7 @@
                                 </td>
                                 <td>{{ $patalpa->updated_at }}</td> <!--App\Pertvara::where('patalpos_id', 'like', $patalpa->id)->count()-->
 
-                                <td>
+                                <td style="width: 110px;">
                                     <a class="btn" id="redaguoti" href="/patalpos/{{ $patalpa->id }}/edit"><i class="fa fa-edit"></i></a>
                                     <button class="btn" id="trinti" formaction="{{ action('PatalposController@destroy', $patalpa->id) }}" type="submit"><i class="fa fa-trash"></i></button>
                                 </td>

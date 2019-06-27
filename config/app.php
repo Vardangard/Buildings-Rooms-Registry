@@ -162,6 +162,7 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
+        Yajra\Oci8\Oci8ServiceProvider::class,
 
         /*
          * Package Service Providers...

@@ -65,12 +65,12 @@
                                 <td>{{ $pastatas->enddate ?? '-' }}</td>
                                 <td>{{ $pastatas->busena }}</td> 
                                 <td>{{ $pastatas->miestas }}</td>
-                                <td>
+                                <td style="width: 250px;">
                                     Darbo diena: {{ $pastatas->darbo_laikas_p_s }} - {{ $pastatas->darbo_laikas_p_e }}<br/>
                                     Seštadienis: {{ $pastatas->darbo_laikas_ses_s }} - {{ $pastatas->darbo_laikas_ses_e }}<br/>
                                     Sekmadienis: {{ $pastatas->darbo_laikas_sek_s }} - {{ $pastatas->darbo_laikas_sek_e }}
                                 </td>
-                                <td>	
+                                <td style="width: 110px;">	
                                     <a class="btn" id="redaguoti" href="/pastatai/{{ $pastatas->id }}/edit"><i class="fa fa-edit"></i></a>
                                     <button class="btn" id="trinti" formaction="{{ action('PastataiController@destroy', $pastatas->id) }}" type="submit"><i class="fa fa-trash"></i></button>
                                 </td>
@@ -111,20 +111,6 @@
             $('.selectall2').prop('checked', false);
         }
     })
-
-    /*function update(id) {
-        var kodas = $("#"+id).html();
-        console.log(kodas);
-        $.ajax({
-            type: "POST",
-            url: '{{ URL::to("/updates") }}',
-            data: {
-                kodas: kodas,
-                id: id,
-                _token: '{{ csrf_token() }}'
-            },
-        });  
-    }*/
 </script>
     
 @endsection

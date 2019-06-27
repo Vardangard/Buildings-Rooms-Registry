@@ -21,3 +21,7 @@ Route::delete('delete-all-patalpas', 'PatalposController@deleteAll');
 Route::delete('delete-all-pertvaras', 'PertvarosController@deleteAll');
 Route::get('/pertvaros-paieska', 'PertvarosController@search');
 Route::get('/patalpos-paieska', 'PatalposController@search');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

@@ -49,7 +49,6 @@ class PatalposController extends Controller
             $this->validate($request, [
                 'pastatai_id' => 'required',
                 'aukstas' => 'required',
-                'pertvaros' => 'required',
                 'nr' => 'required'
             ]);
         
@@ -106,7 +105,6 @@ class PatalposController extends Controller
         $this->validate($request, [
             'pastatai_id' => 'required',
             'aukstas' => 'required',
-            'pertvaros' => 'required',
             'nr' => 'required'
         ]);
 
@@ -164,7 +162,7 @@ class PatalposController extends Controller
             if(!empty($patalposNr)) {
                 $query->where('nr', 'like', '%'.$patalposNr.'%');
             }
-            if(!empty($pertvaros)) {
+            if(!empty($pertvarosSk) || $pertvarosSk == 0) {
                 $query->where('pertvaros', 'like', '%'.$pertvarosSk.'%');
             }  
         })

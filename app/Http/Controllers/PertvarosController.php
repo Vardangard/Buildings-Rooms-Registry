@@ -64,7 +64,6 @@ class PertvarosController extends Controller
 
         $pertvara = new Pertvara;
         $pertvara->patalpos_id = $request->input('patalpos_id');
-       
         $pertvara->kvadratura = $request->input('kvadratura');
         $pertvara->talpa = $request->input('talpa');
         $pertvara->tipas = $request->input('tipas');
