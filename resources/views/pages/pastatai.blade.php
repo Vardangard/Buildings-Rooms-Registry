@@ -61,8 +61,8 @@
                                 <td>{{ $pastatas->aukstai }}</td>
                                 <td>{{ $pastatas->kadastronr }}</td>
                                 <td style="width: 300px;">{{ $pastatas->padaliniai }}</td>
-                                <td>{{ $pastatas->startdate }}</td>
-                                <td>{{ $pastatas->enddate ?? '-' }}</td>
+                                <td>{{ \Carbon\Carbon::parse($pastatas->startdate)->format('Y-m-d') }}</td>
+                                <td>{{ \Carbon\Carbon::parse($pastatas->enddate)->format('Y-m-d') ?? '-' }}</td>
                                 <td>{{ $pastatas->busena }}</td> 
                                 <td>{{ $pastatas->miestas }}</td>
                                 <td style="width: 250px;">
@@ -81,7 +81,11 @@
                 @else
                     <p class="alert alert-danger" style="border-radius:0px; margin-bottom:0px">Duomenų Nėra</p>
                 @endif
-            </table> 
+            </table>
+            <div> <!--class="d-flex justify-content-center"-->
+                <br/>
+                {{ $pastatai->links() }}
+            </div> 
         </div>
         
     </div>

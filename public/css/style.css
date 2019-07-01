@@ -89,7 +89,7 @@ thead {
     padding: 0px !important; 
     margin: 0px !important; 
     width:0px!important;
-    margin-right: 0px !important;
+    margin-right: 30px !important;
     background-color: transparent;
 }
 #trinti:hover {
@@ -97,7 +97,7 @@ thead {
     border-bottom: 1px solid #d7575a;
 }
 table {
-    font-size: 15px;
+    font-size: 12px;
     margin-bottom: 0px !important;
     padding-bottom: 0px !important;
     margin-top: 0px;
@@ -180,4 +180,26 @@ tfoot {
     border: 1px solid rgba(0,0,0,.125) !important;
     border-radius: .25rem !important;
     margin-top: 20px;
+}
+.btn-disabled {
+    pointer-events:none;
+}
+.btn-danger {
+    color: #fff;
+    background-color: #d40020 !important;
+    border-color: #d40020 !important;
+}
+.row {
+    height: 55px;
+}
+.outer
+{
+    height: 600px;
+    position: relative;
+    /*border: 1px solid red;*/
+}
+.inner
+{
+    position: absolute;
+    /*border: 1px solid blue;*/
 }

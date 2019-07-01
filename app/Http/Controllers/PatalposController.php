@@ -12,6 +12,11 @@ use Exception;
 
 class PatalposController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -22,7 +27,7 @@ class PatalposController extends Controller
         $pastatai = Pastatas::pluck('pavadinimas', 'id');
         #$pastatu_patalpos = Patalpa::with('pastatas')->get()->pluck('pastatas.pavadinimas', 'patalpa.id')->unique();
         $nr = Patalpa::pluck('nr', 'nr');
-        $patalpos = Patalpa::orderBy('created_at', 'desc')->paginate(40);
+        $patalpos = Patalpa::orderBy('created_at', 'desc')->paginate(25);
         $pertvaros = Pertvara::all();
         return view('pages.patalpos', compact('patalpos', 'pertvaros', 'pastatai', 'nr'));
     }
@@ -61,7 +66,7 @@ class PatalposController extends Controller
         $patalpa->nr = $request->input('nr');
         $patalpa->save();
 
-        } catch(\Illuminate\Database\QueryException $ex)
+        } catch(\Yajra\Pdo\Oci8\Exceptions\Oci8Exception $ex)
         {
             return back()->withError($patalpa->pastatas->pavadinimas.' pastate '.$request->input('nr').' patalpos numeris jau egzistuoja');
         }
@@ -113,8 +118,7 @@ class PatalposController extends Controller
         $patalpa = Patalpa::find($id);
         $patalpa->pastatai_id = $request->input('pastatai_id');
         $patalpa->aukstas = $request->input('aukstas');
-        $patalpa->pertvaros = $request->input('pertvaros');
-        $patalpa->nr = $request->input('nr');
+        //$patalpa->nr = $request->input('nr');
         $patalpa->save();
 
         } catch(\Illuminate\Database\QueryException $ex)

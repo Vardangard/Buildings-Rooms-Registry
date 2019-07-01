@@ -72,6 +72,10 @@
                     <p class="alert alert-danger" style="border-radius:0px; margin-bottom:0px">Duomenų Nėra</p>
                 @endif
             </table>
+            <br/>
+            <div>  <!--class="d-flex justify-content-center"-->
+                {{ $patalpos->links() }}
+            </div>
         </div>
     </div>
 </div>

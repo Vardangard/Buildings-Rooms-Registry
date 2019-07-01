@@ -89,9 +89,10 @@
                             <div class="col-md-6 text-left">
                                 {{Form::select('miestas',['Kaunas' => 'Kaunas', 'Vilnius' => 'Vilnius', 'Klaipėda' => 'Klaipėda'], null,
                                     [
-                                    'class' => 'form-control',
-                                    'placeholder' => 'Pasirinkti Miestą',
-                                    'style' => 'margin-bottom: 2px'
+                                        'class' => 'form-control',
+                                        'placeholder' => 'Pasirinkti Miestą',
+                                        'style' => 'margin-bottom: 2px; width: 278px',
+                                        'id' => 'miestass'
                                     ])
                                 }}<br/>
                             </div>
@@ -103,9 +104,10 @@
                             <div class="col-md-6 text-left">
                                 {{Form::select('busena',['Aktyvus (-i)' => 'Aktyvus (-i)', 'Remontuojamas (-a)' => 'Remontuojamas (-a)', 'Kraustymas' => 'Kraustymas', 'Panaikintas (-a)' => 'Panaikintas (-a)'], null,
                                 [
-                                'class' => 'form-control',
-                                'placeholder' => 'Pasirinkti Būsena',
-                                'style' => 'margin-bottom: 2px'
+                                    'class' => 'form-control',
+                                    'placeholder' => 'Pasirinkti Būsena',
+                                    'style' => 'margin-bottom: 2px; width: 278px',
+                                    'id' => 'busenaa'
                                 ])
                             }}<br/>
                             </div>
@@ -155,3 +157,13 @@
         {!! Form::close() !!}
     </div>
 </div>
+
+<script type="text/javascript">
+    $("#miestass").select2({
+        minimumResultsForSearch: 20,
+    });
+    $("#busenaa").select2({
+        minimumResultsForSearch: 20,
+    });
+    allowClear: true;
+</script>

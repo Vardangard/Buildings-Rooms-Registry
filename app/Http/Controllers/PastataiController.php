@@ -8,6 +8,11 @@ use DB;
 
 class PastataiController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +20,7 @@ class PastataiController extends Controller
      */
     public function index()
     {
-        $pastatai = Pastatas::orderBy('id', 'desc')->paginate(40);
+        $pastatai = Pastatas::orderBy('id', 'desc')->paginate(25);
         $kadastrai = Pastatas::pluck('kadastronr', 'kadastronr');
         $kodai = Pastatas::pluck('kodas', 'kodas');
         $pavadinimai = Pastatas::pluck('pavadinimas', 'pavadinimas');
@@ -50,26 +55,34 @@ class PastataiController extends Controller
             'padaliniai' => 'required',
             'miestas' => 'required',
             'busena' => 'required', 
+            'startdate' => 'required',
         ]);
 
-        $pastatas = new Pastatas;
-        $pastatas->kadastronr = $request->input('kadastronr');
-        $pastatas->kodas = $request->input('kodas');
-        $pastatas->pavadinimas = $request->input('pavadinimas');
-        $pastatas->adresas = $request->input('adresas');
-        $pastatas->aukstai = $request->input('aukstai');
-        $pastatas->padaliniai = $request->input('padaliniai');
-        $pastatas->miestas = $request->input('miestas');
-        $pastatas->busena = $request->input('busena');
-        $pastatas->startdate = $request->input('startdate');
-        $pastatas->enddate = $request->input('enddate');
-        $pastatas->darbo_laikas_p_s = $request->input('p_s');
-        $pastatas->darbo_laikas_p_e = $request->input('p_e');
-        $pastatas->darbo_laikas_ses_s = $request->input('ses_s');
-        $pastatas->darbo_laikas_ses_e = $request->input('ses_e');
-        $pastatas->darbo_laikas_sek_s = $request->input('sek_s');
-        $pastatas->darbo_laikas_sek_e = $request->input('sek_e');
-        $pastatas->save();
+        try {
+
+            $pastatas = new Pastatas;
+            $pastatas->kadastronr = $request->input('kadastronr');
+            $pastatas->kodas = $request->input('kodas');
+            $pastatas->pavadinimas = $request->input('pavadinimas');
+            $pastatas->adresas = $request->input('adresas');
+            $pastatas->aukstai = $request->input('aukstai');
+            $pastatas->padaliniai = $request->input('padaliniai');
+            $pastatas->miestas = $request->input('miestas');
+            $pastatas->busena = $request->input('busena');
+            $pastatas->startdate = $request->input('startdate');
+            $pastatas->enddate = $request->input('enddate');
+            $pastatas->darbo_laikas_p_s = $request->input('p_s');
+            $pastatas->darbo_laikas_p_e = $request->input('p_e');
+            $pastatas->darbo_laikas_ses_s = $request->input('ses_s');
+            $pastatas->darbo_laikas_ses_e = $request->input('ses_e');
+            $pastatas->darbo_laikas_sek_s = $request->input('sek_s');
+            $pastatas->darbo_laikas_sek_e = $request->input('sek_e');
+            $pastatas->save();
+
+        } catch(\Yajra\Pdo\Oci8\Exceptions\Oci8Exception $ex)
+        {
+            return back()->withError('Pastatas su panašiu pavadinimu , adresu arba kodu jau egzistuoja');
+        }
 
         return redirect('/pastatai')->with('success', 'Pastatas sėkmingai pridėtas');
     }
@@ -115,6 +128,7 @@ class PastataiController extends Controller
             'padaliniai' => 'required',
             'miestas' => 'required',
             'busena' => 'required', 
+            'startdate' => 'required'
         ]);
 
         $pastatas = Pastatas::find($id);

@@ -1,5 +1,5 @@
 <!-- Ivesti nauja pastata -->
-<button class="btn btn-light" style="left:20px;position:absolute" data-toggle="modal" data-target="#addNewPatalpaModal">Įvesti nauja patalpą</button>
+<button class="btn btn-light" <?php echo $d = (App\Pastatas::count() < 1) ? 'disabled="disabled"' : '' ?> style="left:20px;position:absolute" data-toggle="modal" data-target="#addNewPatalpaModal">Įvesti nauja patalpą</button>
 <!-- Add New Modal -->
 <div class="modal fade" id="addNewPatalpaModal" role="dialog" aria-labelledby="addNewPatalpaModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -49,14 +49,14 @@
                                 {{ Form::text('nr', '', ['class' => 'form-control', 'placeholder' => 'Patalpos Nr', 'style' => 'margin-bottom: 2px']) }}<br/>
                             </div>
                         </div>
-                        <div class="row" style="padding-right: 150px;">
+                        <!--<div class="row" style="padding-right: 150px;">
                             <div class="col-md-6 text-right">
                                 {{ Form::label('pertvaros', 'Patalpos dalių sk') }}<br/>
                             </div>
                             <div class="col-md-6 text-left">
                                 {{ Form::number('pertvaros', '1',  ['min'=>1,'max'=>16, 'class' => 'form-control', 'placeholder' => 'Patalpos dalių skaičius', 'style' => 'width:50%;']) }}<br/>
                             </div>
-                        </div>
+                        </div>-->
                     </div>
                 </div>
             </div>

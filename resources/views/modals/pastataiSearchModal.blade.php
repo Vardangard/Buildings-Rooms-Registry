@@ -1,5 +1,5 @@
 <!-- Paieska/filtravimas -->
-<button class="btn btn-light" style="left:200px;position:absolute" data-toggle="modal" data-target="#searchModal">Paieška/Filtravimas</button>
+<button class="btn btn-light" <?php echo $d = (App\Pastatas::count() < 1) ? 'disabled="disabled"' : '' ?> style="left:200px;position:absolute" data-toggle="modal" data-target="#searchModal">Paieška/Filtravimas</button>
 <!-- Search Modal -->
 <div class="modal fade" id="searchModal" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -98,9 +98,10 @@
                                     [
                                         'class' => 'form-control',
                                         'placeholder' => '-Būsena-',
-                                        'style' => 'margin-bottom: 2px'
+                                        'style' => 'margin-bottom: 2px; width: 278px',
+                                        'id' => 'busenaaa'
                                     ])
-                            }}<br/>
+                                }}<br/>
                             </div>
                         </div>
                     </div>
@@ -121,5 +122,8 @@
     $("#kodass").select2();
     $("#pavadinimass").select2();
     $("#adresass").select2();
+    $("#busenaaa").select2({
+        minimumResultsForSearch: 20,
+    });
     allowClear: true;
 </script>

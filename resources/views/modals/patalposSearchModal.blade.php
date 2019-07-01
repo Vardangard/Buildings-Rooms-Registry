@@ -1,5 +1,5 @@
 <!-- Paieska/filtravimas -->
-<button class="btn btn-light" style="left:20px;position:absolute" data-toggle="modal" data-target="#patalposSearchModal">Paieška/Filtravimas</button>
+<button class="btn btn-light" <?php echo $d = (App\Patalpa::count() < 1) ? 'disabled="disabled"' : '' ?> style="left:20px;position:absolute" data-toggle="modal" data-target="#patalposSearchModal">Paieška/Filtravimas</button>
 <!-- Search Modal -->
 <div class="modal fade" id="patalposSearchModal" role="dialog" aria-labelledby="patalposSearchModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">

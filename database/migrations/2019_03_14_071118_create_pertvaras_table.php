@@ -19,14 +19,14 @@ class CreatePertvarasTable extends Migration
             $table->foreign('patalpos_id')->references('id')->on('patalpas')->onDelete('cascade');
             $table->float('kvadratura', 8, 2);
             $table->integer('talpa');
-            $table->string('tipas', 20);
+            $table->string('tipas', 30);
             $table->string('nr');
             $table->unique(['nr', 'patalpos_id']);
             $table->date('startdate');
             $table->date('enddate')->nullable();
             $table->string('telefonas', 50)->nullable();
             $table->string('faksas', 50)->nullable();
-            $table->string('busena', 20);
+            $table->string('busena', 30);
             $table->string('atsakingas', 100)->nullable();
             $table->string('multimedia', 50)->nullable();
             $table->string('pc', 50)->nullable();

@@ -42,4 +42,5 @@ class User extends Authenticatable
     protected $table = 'sso_users';
 
     protected $primaryKey = 'id';
+
 }

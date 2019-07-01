@@ -128,9 +128,24 @@ return [
     */
 
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
-        ],
+        'kadastronr' => [ 'required' => 'Neįvestas kadastro numeris.', ],
+        'kodas' => [ 'required' => 'Neįvestas kodas.', ],
+        'pavadinimas' => [ 'required' => 'Neįvestas pastato pavadinimas.', ],
+        'adresas' => [ 'required' => 'Neįvestas adresas.', ],
+        'aukstai' => [ 'required' => 'Neįvestas pastato aukštų kiekis.', ],
+        'padaliniai' => [ 'required' => 'Neįvesti padaliniai.', ],
+        'miestas' => [ 'required' => 'Nepasirinktas miestas.', ],
+        'busena' => [ 'required' => 'Nepasirinkta būsena.', ],
+
+        'pastatai_id' => [ 'required' => 'Nepasirinktas pastatas.', ],
+        'nr' => [ 'required' => 'Neįvestas numeris.', ],
+
+        'patalpos_id' => [ 'required' => 'Nepasirinkta patalpa.', ],
+        'kvadratura' => [ 'required' => 'Neįvesta kvadratūra.', ],
+        'talpa' => [ 'required' => 'Neįvesta talpa.', ],
+        'tipas' => [ 'required' => 'Nepasirinktas tipas.', ],
+        'startdate' => [ 'required' => 'Nepasirinkta pradžios data.', ],
+        
     ],
 
     /*

@@ -14,7 +14,7 @@
         <h5 class="text-center" style="position:relative">
             @include('modals.patalposAddNewModal')
 
-            <a href="/pertvaros/create" class="btn btn-light" style="left:200px;position:absolute">Įvesti Pertvara</a>
+            <a href="/pertvaros/create" class="btn btn-light <?php echo $d = (App\Patalpa::count() < 1) ? 'disabled"' : '' ?>"  style="left:200px;position:absolute">Įvesti Pertvara</a>
 
             @include('modals.pertvarosSearchModal')
             <!-- Form Delete -->
@@ -61,33 +61,35 @@
                         @foreach($pertvaros as $pertvara)
                             <tr>
                                 <td><input type="checkbox" name="ids[]" class="selectbox" value="{{ $pertvara->id }}"></td>
-                                <td>{{ $pertvara->patalpa->pastatas->pavadinimas }}</td>
+                                <td style="width: 200px;">{{ $pertvara->patalpa->pastatas->pavadinimas }}</td>
                                 <td>{{ $pertvara->patalpa->aukstas }}</td>
                                 <td>{{ $pertvara->patalpa->nr }}</td>
-                                <td>{{ $pertvara->tipas }}</td>
+                                <td style="width: 150px;">{{ $pertvara->tipas }}</td>
                                 <td>{{ $pertvara->pavadinimas }}</td>
                                 <td>{{ $pertvara->nr }}</td>
                                 <td>{{ $pertvara->talpa }}</td>
-                                <td>{{ $pertvara->atsakingas ?? '-' }}</td>
+                                <td style="width: 160px;">{{ $pertvara->atsakingas ?? 'Deividas Januškevičius' }}</td>
                                 <td>{{ $pertvara->telefonas ?? '-' }}</td>
                                 <td>{{ $pertvara->kvadratura }} m2</td>
-                                <td>{{ $pertvara->busena }}</td>
-                                <td>{{ $pertvara->startdate }}</td>
-                                <td>{{ $pertvara->enddate ?? '-' }}</td>
-                                <td>{{ $pertvara->updated_at }}</td>
+                                <td style="width: 150px;">{{ $pertvara->busena }}</td>
+                                <td style="width: 100px;">{{ \Carbon\Carbon::parse($pertvara->startdate)->format('Y-m-d') }}</td>
+                                <td style="width: 100px;">{{ \Carbon\Carbon::parse($pertvara->enddate)->format('Y-m-d') ?? '-' }}</td>
+                                <td style="width: 170px;">{{ $pertvara->updated_at }}</td>
 
-                                <td>
+                                <td style="width: 110px;">
                                     <a class="btn" id="redaguoti" href="/pertvaros/{{ $pertvara->id }}/edit"><i class="fa fa-edit"></i></a>
                                     <button class="btn" id="trinti" formaction="{{ action('PertvarosController@destroy', $pertvara->id) }}" type="submit"><i class="fa fa-trash"></i></button>
                                 </td>
                             </tr>
-                        @endforeach
-                   
+                        @endforeach        
                 </tbody>
                 @else
                     <p class="alert alert-danger" style="border-radius:0px; margin-bottom:0px">Duomenų Nėra</p>
                 @endif
             </table>
+            <div> <!--class="d-flex justify-content-center"-->
+                {{ $pertvaros->links() }}
+            </div>
         </div>
     </div>
 </div>

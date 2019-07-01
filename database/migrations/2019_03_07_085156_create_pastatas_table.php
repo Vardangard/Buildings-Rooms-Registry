@@ -20,8 +20,8 @@ class CreatePastatasTable extends Migration
             $table->string('kadastronr', 30)->unique();
             $table->string('padaliniai', 500);
             $table->string('pavadinimas', 150)->unique();
-            $table->string('miestas', 10);
-            $table->string('busena', 15);
+            $table->string('miestas', 15);
+            $table->string('busena', 30);
             $table->integer('aukstai');
             $table->date('startdate')->nullable();
             $table->date('enddate')->nullable();

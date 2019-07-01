@@ -10,6 +10,11 @@ use DB;
 
 class PertvarosController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -23,7 +28,7 @@ class PertvarosController extends Controller
         $pastatu_patalpos = Patalpa::with('pastatas')->get()->pluck('pastatas.pavadinimas', 'patalpa.id')->unique();
         $plnr = Patalpa::pluck('nr', 'nr');
         $numeris = Pertvara::pluck('nr', 'nr');
-        $pertvaros = Pertvara::orderBy('updated_at', 'desc')->paginate(40);
+        $pertvaros = Pertvara::orderBy('updated_at', 'desc')->paginate(25);
         return view('pages.pertvaros', compact('pertvaros', 'pastatai', 'plnr', 'numeris'));
     }
 
@@ -36,9 +41,10 @@ class PertvarosController extends Controller
     {
         $patalpos = DB::table('patalpas as pl')
         ->join('pastatas as pt', 'pt.id', '=', 'pl.pastatai_id')
-        ->select(DB::raw("pl.id, CONCAT(pt.pavadinimas,', ',pl.nr,', ',pl.aukstas,' aukštas') as patalpa"))
+        ->select(DB::raw("pl.id, (pt.pavadinimas || ', ' || pl.nr || ', ' || pl.aukstas ||' aukštas') as patalpa"))
         ->orderBy('patalpa','asc')
         ->pluck('patalpa','pl.id');
+        //$patalpos = DB::table('patalpas')->pluck('nr', 'id');
         return view('pages.addPertvara', compact('patalpos'));
     }
 
@@ -121,9 +127,10 @@ class PertvarosController extends Controller
         $pertvara = Pertvara::find($id);
         $patalpos = DB::table('patalpas as pl')
         ->join('pastatas as pt', 'pt.id', '=', 'pl.pastatai_id')
-        ->select(DB::raw("pl.id, CONCAT(pt.pavadinimas,', ',pl.nr,', ',pl.aukstas,' aukštas') as patalpa"))
+        ->select(DB::raw("pl.id, pt.pavadinimas || ', ' || pl.nr || ', ' || pl.aukstas ||' aukštas' as patalpa"))
         ->orderBy('patalpa','asc')
         ->pluck('patalpa','pl.id');
+        //$patalpos = DB::table('patalpas')->pluck('nr', 'id');
         return view('pages.redaguotiPertvara', compact('pertvara', 'patalpos'));
     }
 
@@ -190,14 +197,27 @@ class PertvarosController extends Controller
     public function destroy($id)
     {
         $pertvara = Pertvara::find($id);
+        $patalpa = Patalpa::find($pertvara->patalpos_id);
+        $patalpa->pertvaros = $patalpa->pertvaros - 1;
+        $patalpa->save();
         $pertvara->delete();
+        
         return redirect('/pertvaros')->with('success', 'Patalpos dalis ištrinta');
     }
 
     public function deleteAll(Request $request) 
     {
         $ids = $request->get('ids');
+        
+        foreach($ids as $id) 
+        {
+            $pertvara = Pertvara::find($id);
+            $patalpa = Patalpa::find($pertvara->patalpos_id);
+            $patalpa->pertvaros = $patalpa->pertvaros - 1;
+            $patalpa->save();
+        }
         Pertvara::destroy($ids);
+
         return redirect('/pertvaros')->with('success', 'Ištrintos pasirinktos patalpų dalys');
     }
 
@@ -209,6 +229,7 @@ class PertvarosController extends Controller
         $pastatu_patalpos = Patalpa::with('pastatas')->get()->pluck('pastatas.pavadinimas', 'patalpa.id')->unique();
         $plnr = Patalpa::pluck('nr', 'nr');
         $numeris = Pertvara::pluck('nr', 'nr');
+        $patalpos = Patalpa::all();
 
         $pastato_id = $request->get('pastatai_id');
         $aukstas = $request->get('aukstas');
@@ -298,6 +319,6 @@ class PertvarosController extends Controller
         })->paginate(20);
         
 
-        return view('pages.pertvaros', ['pertvaros' => $pertvaros], compact('pastatai', 'pastatu_patalpos', 'plnr', 'numeris'));
+        return view('pages.pertvaros', ['pertvaros' => $pertvaros], compact('pastatai', 'pastatu_patalpos', 'plnr', 'numeris', 'patalpos'));
     }
 }
