@@ -21,8 +21,9 @@
 
             <!-- Title -->
             <span style="color:white">Patalpų paieškos rezultatai</span>
-            
-            <button formaction="/delete-all-patalpas" type="submit"  class="btn btn-danger"  style="right:20px;position:absolute">Ištrinti Pasirinktas Patalpas</button>    
+            @can('create', \App\Patalpa::class)
+                <button formaction="/delete-all-patalpas" type="submit"  class="btn btn-danger"  style="right:20px;position:absolute">Ištrinti Pasirinktas Patalpas</button>    
+            @endcan
         </h5>
          <!-- END HEADING -->
     </div>
@@ -35,21 +36,26 @@
             <table class="table table-bordered table-hover auto">
                 <thead class="thead-dark">
                     <tr>
-                        <th><input type="checkbox" class="selectall"></th>
+                        @can('elements', \App\Patalpa::class)
+                            <th><input type="checkbox" class="selectall"></th>
+                        @endcan
                         <th>Pastatas</th>
                         <th>Aukštas</th>
                         <th>Patalpos Nr.</th>
                         <th>Pertvaros</th>
                         <th>Paskutinį kartą redaguotas</th>
-                        <th>Veiksmas</th>
+                        @can('elements', \App\Patalpa::class)
+                            <th>Veiksmas</th>
+                        @endcan
                     </tr>
                 </thead> 
                 <tbody>                    
                     
                         @foreach($patalpos as $patalpa)
                             <tr>
-                                <td><input type="checkbox" name="ids[]" class="selectbox" value="{{ $patalpa->id }}"></td>
-                        
+                                @can('elements', \App\Patalpa::class)
+                                    <td style="width: 12px;"><input type="checkbox" name="ids[]" class="selectbox" value="{{ $patalpa->id }}"></td>
+                                @endcan
                                 <td>{{ $patalpa->pastatas->pavadinimas }}</td>
                                 <td>{{ $patalpa->aukstas }}</td>
                                 <td>{{ $patalpa->nr }}</td>
@@ -61,10 +67,16 @@
                                 </td>
                                 <td>{{ $patalpa->updated_at }}</td> <!--App\Pertvara::where('patalpos_id', 'like', $patalpa->id)->count()-->
 
-                                <td style="width: 110px;">
-                                    <a class="btn" id="redaguoti" href="/patalpos/{{ $patalpa->id }}/edit"><i class="fa fa-edit"></i></a>
-                                    <button class="btn" id="trinti" formaction="{{ action('PatalposController@destroy', $patalpa->id) }}" type="submit"><i class="fa fa-trash"></i></button>
-                                </td>
+                                @can('elements', \App\Patalpa::class)
+                                    <td style="width: 110px;">
+                                        @can('update', $patalpa)
+                                            <a class="btn" id="redaguoti" href="/patalpos/{{ $patalpa->id }}/edit"><i class="fa fa-edit"></i></a>
+                                        @endcan
+                                        @can('delete', $patalpa)
+                                            <button class="btn" id="trinti" formaction="{{ action('PatalposController@destroy', $patalpa->id) }}" type="submit"><i class="fa fa-trash"></i></button>
+                                        @endcan
+                                    </td>
+                                @endcan
                             </tr>
                         @endforeach
                 </tbody>

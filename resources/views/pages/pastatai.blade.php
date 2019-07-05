@@ -12,7 +12,9 @@
     <div class="card-heading bg-dark">
         <!-- HEADING -->
         <h5 class="text-center" style="position:relative">
-            @include('modals.pastataiAddNewModal')
+            @can('create', \App\Pastatas::class)
+                @include('modals.pastataiAddNewModal')
+            @endcan
             @include('modals.pastataiSearchModal')
             <!-- Form Delete -->
             <form method="POST">
@@ -21,8 +23,9 @@
 
             <!-- Title -->
             <span style="color:white">Pastatų paieškos rezultatai</span>
-            
-            <button formaction="/delete-all" type="submit"  class="btn btn-danger"  style="right:20px;position:absolute">Ištrinti Pasirinktus Pastatus</button>    
+            @can('create', \App\Pastatas::class)
+                <button formaction="/delete-all" type="submit"  class="btn btn-danger"  style="right:20px;position:absolute">Ištrinti Pasirinktus Pastatus</button>    
+            @endcan
         </h5>
          <!-- END HEADING -->
     </div>
@@ -35,7 +38,9 @@
                 @if(count($pastatai) >= 1)
                 <thead class="thead-dark">
                     <tr>
-                        <th><input type="checkbox" class="selectall"></th>
+                        @can('elements', \App\Pastatas::class)
+                            <th><input type="checkbox" class="selectall"></th>
+                        @endcan 
                         <th>Kodas</th>
                         <th>Pavadinimas</th>
                         <th>Adresas</th>
@@ -47,14 +52,18 @@
                         <th>Būsena</th>
                         <th>Miestas</th>
                         <th>Darbo laikas</th>
-                        <th>Veiksmas</th>
+                        @can('elements', \App\Pastatas::class)
+                            <th>Veiksmas</th>
+                        @endcan
                     </tr>
                 </thead> 
                 <tbody>
                     
                         @foreach($pastatai as $pastatas)
                             <tr>
-                                <td><input type="checkbox" name="ids[]" class="selectbox" value="{{ $pastatas->id }}"></td>
+                                @can('elements', \App\Pastatas::class)
+                                    <td style="width: 12px;"><input type="checkbox" name="ids[]" class="selectbox" value="{{ $pastatas->id }}"></td>
+                                @endcan
                                 <td>{{ $pastatas->kodas }}</td>
                                 <td>{{ $pastatas->pavadinimas }}</td>
                                 <td>{{ $pastatas->adresas }}</td>
@@ -62,24 +71,30 @@
                                 <td>{{ $pastatas->kadastronr }}</td>
                                 <td style="width: 300px;">{{ $pastatas->padaliniai }}</td>
                                 <td>{{ \Carbon\Carbon::parse($pastatas->startdate)->format('Y-m-d') }}</td>
-                                <td>{{ \Carbon\Carbon::parse($pastatas->enddate)->format('Y-m-d') ?? '-' }}</td>
+                                <td>{{ $date = $pastatas->enddate ? \Carbon\Carbon::parse($pastatas->enddate)->format('Y-m-d') : '-' }}</td>
                                 <td>{{ $pastatas->busena }}</td> 
                                 <td>{{ $pastatas->miestas }}</td>
                                 <td style="width: 250px;">
                                     Darbo diena: {{ $pastatas->darbo_laikas_p_s }} - {{ $pastatas->darbo_laikas_p_e }}<br/>
-                                    Seštadienis: {{ $pastatas->darbo_laikas_ses_s }} - {{ $pastatas->darbo_laikas_ses_e }}<br/>
+                                    Šeštadienis: {{ $pastatas->darbo_laikas_ses_s }} - {{ $pastatas->darbo_laikas_ses_e }}<br/>
                                     Sekmadienis: {{ $pastatas->darbo_laikas_sek_s }} - {{ $pastatas->darbo_laikas_sek_e }}
                                 </td>
-                                <td style="width: 110px;">	
-                                    <a class="btn" id="redaguoti" href="/pastatai/{{ $pastatas->id }}/edit"><i class="fa fa-edit"></i></a>
-                                    <button class="btn" id="trinti" formaction="{{ action('PastataiController@destroy', $pastatas->id) }}" type="submit"><i class="fa fa-trash"></i></button>
-                                </td>
+                                @can('elements', \App\Pastatas::class)
+                                    <td style="width: 110px;">	
+                                        @can('update', $pastatas)
+                                            <a class="btn" id="redaguoti" href="/pastatai/{{ $pastatas->id }}/edit"><i class="fa fa-edit"></i></a>
+                                        @endcan
+                                        @can('delete', $pastatas)
+                                            <button class="btn" id="trinti" formaction="{{ action('PastataiController@destroy', $pastatas->id) }}" type="submit"><i class="fa fa-trash"></i></button>
+                                        @endcan
+                                    </td>
+                                @endcan
                             </tr>
                         @endforeach
                     
                 </tbody>
                 @else
-                    <p class="alert alert-danger" style="border-radius:0px; margin-bottom:0px">Duomenų Nėra</p>
+                    <p class="alert alert-danger" style="border-radius:0px; margin-bottom:0px">Duomenų Nėra!</p>
                 @endif
             </table>
             <div> <!--class="d-flex justify-content-center"-->
@@ -87,11 +102,7 @@
                 {{ $pastatai->links() }}
             </div> 
         </div>
-        
     </div>
-</div>
-<div class="text-right">
-    {{ $pastatai->links() }}
 </div>
 </form>
 

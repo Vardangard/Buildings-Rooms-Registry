@@ -15,10 +15,10 @@ class CreatePastatasTable extends Migration
     {
         Schema::create('pastatas', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('kodas', 30)->unique();
-            $table->string('adresas', 100);
+            $table->string('kodas', 10)->unique();
+            $table->string('adresas', 50);
             $table->string('kadastronr', 30)->unique();
-            $table->string('padaliniai', 500);
+            $table->string('padaliniai', 500)->nullable();
             $table->string('pavadinimas', 150)->unique();
             $table->string('miestas', 15);
             $table->string('busena', 30);

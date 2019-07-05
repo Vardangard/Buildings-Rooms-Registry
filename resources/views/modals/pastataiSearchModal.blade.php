@@ -1,5 +1,5 @@
 <!-- Paieska/filtravimas -->
-<button class="btn btn-light" <?php echo $d = (App\Pastatas::count() < 1) ? 'disabled="disabled"' : '' ?> style="left:200px;position:absolute" data-toggle="modal" data-target="#searchModal">Paieška/Filtravimas</button>
+<button class="btn btn-light" <?php echo $d = (App\Pastatas::count() < 1) ? 'disabled="disabled"' : '' ?> style="left:20px;position:absolute" data-toggle="modal" data-target="#searchModal">Paieška/Filtravimas</button>
 <!-- Search Modal -->
 <div class="modal fade" id="searchModal" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -58,7 +58,7 @@
                                 {{Form::select('pavadinimas', $pavadinimai, null,
                                     [
                                         'class' => 'form-control',
-                                        'placeholder' => '-Kadastrinis Nr-',
+                                        'placeholder' => '-Pavadinimas-',
                                         'style' => 'margin-bottom: 2px; width: 278px',
                                         'id' => 'pavadinimass'
                                     ])

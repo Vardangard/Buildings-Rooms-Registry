@@ -50,11 +50,12 @@ class PatalposController extends Controller
      */
     public function store(Request $request)
     {
-        
+        $this->authorize('create', \App\Patalpa::class);
+
             $this->validate($request, [
                 'pastatai_id' => 'required',
                 'aukstas' => 'required',
-                'nr' => 'required'
+                'nr' => 'required|max:50'
             ]);
         
         try{
@@ -69,6 +70,40 @@ class PatalposController extends Controller
         } catch(\Yajra\Pdo\Oci8\Exceptions\Oci8Exception $ex)
         {
             return back()->withError($patalpa->pastatas->pavadinimas.' pastate '.$request->input('nr').' patalpos numeris jau egzistuoja');
+            /*return back()->withError(' 
+            ─▄▀▀▀▀▄─█──█────▄▀▀█─▄▀▀▀▀▄─█▀▀▄\n
+            ─█────█─█──█────█────█────█─█──█
+            ─█────█─█▀▀█────█─▄▄─█────█─█──█
+            ─▀▄▄▄▄▀─█──█────▀▄▄█─▀▄▄▄▄▀─█▄▄▀
+             
+            ─────────▄██████▀▀▀▀▀▀▄
+            ─────▄█████████▄───────▀▀▄▄
+            ──▄█████████████───────────▀▀▄
+            ▄██████████████─▄▀───▀▄─▀▄▄▄──▀▄
+            ███████████████──▄▀─▀▄▄▄▄▄▄────█
+            █████████████████▀█──▄█▄▄▄──────█
+            ███████████──█▀█──▀▄─█─█─█───────█
+            ████████████████───▀█─▀██▄▄──────█
+            █████████████████──▄─▀█▄─────▄───█
+            █████████████████▀███▀▀─▀▄────█──█
+            ████████████████──────────█──▄▀──█
+            ████████████████▄▀▀▀▀▀▀▄──█──────█
+            ████████████████▀▀▀▀▀▀▀▄──█──────█
+            ▀████████████████▀▀▀▀▀▀──────────█
+            ──███████████████▀▀─────█──────▄▀
+            ──▀█████████████────────█────▄▀
+            ────▀████████████▄───▄▄█▀─▄█▀
+            ──────▀████████████▀▀▀──▄███
+            ──────████████████████████─█
+            ─────████████████████████──█
+            ────████████████████████───█
+            ────██████████████████▄▄▄▄▄█
+             
+            ─────────────█─────█─█──█─█───█
+            ─────────────█─────█─█──█─▀█─█▀
+            ─────────────█─▄█▄─█─█▀▀█──▀█▀
+            ─────────────██▀─▀██─█──█───█');*/
+        
         }
         return redirect('/patalpos')->with('success', 'Patalpa pridėta');
 
@@ -94,6 +129,9 @@ class PatalposController extends Controller
     public function edit($id)
     {
         $patalpa = Patalpa::find($id);
+
+        $this->authorize('update', $patalpa);
+
         $pastatai = Pastatas::pluck('pavadinimas', 'id');
         return view('pages.redaguotiPatalpa', compact('patalpa', 'pastatai'));
     }
@@ -110,7 +148,7 @@ class PatalposController extends Controller
         $this->validate($request, [
             'pastatai_id' => 'required',
             'aukstas' => 'required',
-            'nr' => 'required'
+            'nr' => 'required|max:50'
         ]);
 
         try{
@@ -118,12 +156,12 @@ class PatalposController extends Controller
         $patalpa = Patalpa::find($id);
         $patalpa->pastatai_id = $request->input('pastatai_id');
         $patalpa->aukstas = $request->input('aukstas');
-        //$patalpa->nr = $request->input('nr');
+        $patalpa->nr = $request->input('nr');
         $patalpa->save();
 
         } catch(\Illuminate\Database\QueryException $ex)
         {
-            return back()->withError($patalpa->pastatas->pavadinimas.' pastate \''.$request->input('nr').'\' patalpos numeris jau egzistuoja');
+            return back()->withError($ex);
         }
 
         return redirect('/patalpos')->with('success', 'Patalpa sėkmingai redaguota');
@@ -138,6 +176,9 @@ class PatalposController extends Controller
     public function destroy($id)
     {
         $patalpa = Patalpa::find($id);
+
+        $this->authorize('delete', $patalpa);
+
         $patalpa->delete();
         return redirect('/patalpos')->with('success', 'Patalpa ištrinta');
     }
@@ -170,7 +211,7 @@ class PatalposController extends Controller
                 $query->where('pertvaros', 'like', '%'.$pertvarosSk.'%');
             }  
         })
-        ->paginate(20);
+        ->paginate(25);
 
         $patalpos->appends(['pastatai_id' => $pastato_id, 'aukstas' => $aukstas, 'pertvaros' => $pertvarosSk, 'nr' => $patalposNr]);
 

@@ -128,24 +128,24 @@ return [
     */
 
     'custom' => [
-        'kadastronr' => [ 'required' => 'Neįvestas kadastro numeris.', ],
-        'kodas' => [ 'required' => 'Neįvestas kodas.', ],
-        'pavadinimas' => [ 'required' => 'Neįvestas pastato pavadinimas.', ],
-        'adresas' => [ 'required' => 'Neįvestas adresas.', ],
+        'kadastronr' => [ 'required' => 'Neįvestas kadastro numeris.', 'max' => 'Kadastro Nr. turi būti ne daugiau 30 simbolių.'],
+        'kodas' => [ 'required' => 'Neįvestas kodas.', 'max' => 'Kodas turi būti ne daugiau 10 simbolių.'],
+        'pavadinimas' => [ 'required' => 'Neįvestas pastato pavadinimas.', 'max' => 'Pavadinimas turi būti ne daugiau 150 simbolių.'],
+        'adresas' => [ 'required' => 'Neįvestas adresas.', 'max' => 'Adresas turi būti ne daugiau 50 simbolių.'],
         'aukstai' => [ 'required' => 'Neįvestas pastato aukštų kiekis.', ],
-        'padaliniai' => [ 'required' => 'Neįvesti padaliniai.', ],
+        'padaliniai' => [ 'required' => 'Neįvesti padaliniai.', 'max' => 'Padaliniai turi būti ne daugiau 500 simbolių.'],
         'miestas' => [ 'required' => 'Nepasirinktas miestas.', ],
         'busena' => [ 'required' => 'Nepasirinkta būsena.', ],
 
         'pastatai_id' => [ 'required' => 'Nepasirinktas pastatas.', ],
-        'nr' => [ 'required' => 'Neįvestas numeris.', ],
+        'nr' => [ 'required' => 'Neįvestas numeris.', 'max' => 'Numeris negali viršyti 50 simbolių.'],
 
         'patalpos_id' => [ 'required' => 'Nepasirinkta patalpa.', ],
-        'kvadratura' => [ 'required' => 'Neįvesta kvadratūra.', ],
-        'talpa' => [ 'required' => 'Neįvesta talpa.', ],
-        'tipas' => [ 'required' => 'Nepasirinktas tipas.', ],
-        'startdate' => [ 'required' => 'Nepasirinkta pradžios data.', ],
-        
+        'kvadratura' => [ 'required' => 'Neįvesta kvadratūra.', 'max' => 'Kvadratura neturi viršyti 6 skaičių.'],
+        'talpa' => [ 'required' => 'Neįvesta talpa.', 'max' => 'Talpa neturi viršyti 8 simbolių.'],
+        'tipas' => [ 'required' => 'Nepasirinktas tipas.', 'max' => 'Tipas neturi viršyti 30 simbolių.'],
+        'startdate' => [ 'required' => 'Nepasirinkta pradžios data.', 'before_or_equal' => 'Pradžios data turi būti lygi arba ankstesnė data negu šiandien.' ],
+        'enddate' => ['after_or_equal' => 'Pabaigos data turi būti lygi arbas vėlesnė negu pradžios data.'],
     ],
 
     /*

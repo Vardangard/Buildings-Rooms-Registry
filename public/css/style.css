@@ -110,10 +110,12 @@ table {
 td, th {
     vertical-align: middle !important;
     word-wrap:wrap !important;
+    
 }
 td {
-    padding: 10px !important;
     margin: 0px !important;
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
 }
 tfoot {
     padding-bottom: 0px;
@@ -138,6 +140,10 @@ tfoot {
 .form-control {
     margin-bottom: 0px !important;
     border-radius: 0px !important;
+    
+}
+::placeholder {
+
 }
 .select2-container--default .select2-selection--single {
     border-radius: 0px !important;

@@ -1,5 +1,5 @@
 <!-- Button trigger modal -->
-<button class="btn btn-light" <?php echo $d = (App\Pertvara::count() < 1) ? 'disabled="disabled"' : '' ?> style="left:338px;position:absolute" data-toggle="modal" data-target="#searchModal">Paieška/Filtravimas</button>
+<button class="btn btn-light" <?php echo $d = (App\Pertvara::count() < 1) ? 'disabled="disabled"' : '' ?> style="left:20px;position:absolute" data-toggle="modal" data-target="#searchModal">Paieška/Filtravimas</button>
 <!-- Search Modal -->
 <div class="modal fade" id="searchModal" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -37,7 +37,7 @@
                                 {{ Form::label('aukstas', 'Patalpos aukštas') }}<br/>
                             </div>
                             <div class="col-md-6 text-left">
-                                {{ Form::number('aukstas', '', ['min'=>1,'max'=>16, 'class' => 'form-control', 'placeholder' => 'Aukštas', 'style' => 'margin-bottom: 2px']) }}<br/>
+                                {{ Form::number('aukstas', '', ['min'=>1,'max'=>16, 'class' => 'form-control', 'placeholder' => 'Aukštas', 'style' => 'margin-bottom: 2px; width: 50%;']) }}<br/>
                             </div>
                         </div>
                         <div class="row" style="padding-right: 150px;">

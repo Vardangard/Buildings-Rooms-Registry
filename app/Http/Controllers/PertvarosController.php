@@ -39,6 +39,7 @@ class PertvarosController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', \App\Pertvara::class);
         $patalpos = DB::table('patalpas as pl')
         ->join('pastatas as pt', 'pt.id', '=', 'pl.pastatai_id')
         ->select(DB::raw("pl.id, (pt.pavadinimas || ', ' || pl.nr || ', ' || pl.aukstas ||' aukštas') as patalpa"))
@@ -58,12 +59,13 @@ class PertvarosController extends Controller
     {
         $this->validate($request, [
             'patalpos_id' => 'required',
-            'kvadratura' => 'required',
-            'talpa' => 'required',
-            'tipas' => 'required',
-            'startdate' => 'required',
+            'kvadratura' => 'required|max:6',
+            'talpa' => 'required|max:8',
+            'tipas' => 'required|max:30',
+            'startdate' => 'required|date|before_or_equal:today',
+            'enddate' => 'date|after_or_equal:today|nullable',
             'busena' => 'required',
-            'pavadinimas' => 'required',
+            'pavadinimas' => 'required|max:150',
         ]);
 
         try{
@@ -125,6 +127,9 @@ class PertvarosController extends Controller
     public function edit($id)
     {
         $pertvara = Pertvara::find($id);
+
+        $this->authorize('update', $pertvara);
+
         $patalpos = DB::table('patalpas as pl')
         ->join('pastatas as pt', 'pt.id', '=', 'pl.pastatai_id')
         ->select(DB::raw("pl.id, pt.pavadinimas || ', ' || pl.nr || ', ' || pl.aukstas ||' aukštas' as patalpa"))
@@ -145,15 +150,15 @@ class PertvarosController extends Controller
     {
         $this->validate($request, [
             'patalpos_id' => 'required',
-            'kvadratura' => 'required',
-            'talpa' => 'required',
-            'tipas' => 'required',
-            'startdate' => 'required',
+            'kvadratura' => 'required|max:6',
+            'talpa' => 'required|max:8',
+            'tipas' => 'required|max:30',
+            'startdate' => 'required|date|before_or_equal:today',
+            'enddate' => 'date|after_or_equal:today|nullable',
             'busena' => 'required',
-            'pavadinimas' => 'required',
+            'pavadinimas' => 'required|max:50',
         ]);
 
-        try {
 
         $pertvara = Pertvara::find($id);
         $pertvara->patalpos_id = $request->input('patalpos_id');
@@ -180,10 +185,7 @@ class PertvarosController extends Controller
         $pertvara->ekr_dydis = $request->input('ekr_dydis');
         $pertvara->save();
 
-        } catch(\Illuminate\Database\QueryException $ex)
-        {
-            return back()->withError($pertvara->patalpa->pavadinimas.' pastate '.$request->input('nr').' patalpos numeris jau egzistuoja');
-        }
+     
 
         return redirect('/pertvaros')->with('success', 'Patalpos dalis sėkmingai redaguota');
     }
@@ -197,6 +199,9 @@ class PertvarosController extends Controller
     public function destroy($id)
     {
         $pertvara = Pertvara::find($id);
+
+        $this->authorize('delete', $pertvara);
+
         $patalpa = Patalpa::find($pertvara->patalpos_id);
         $patalpa->pertvaros = $patalpa->pertvaros - 1;
         $patalpa->save();
@@ -208,13 +213,18 @@ class PertvarosController extends Controller
     public function deleteAll(Request $request) 
     {
         $ids = $request->get('ids');
-        
-        foreach($ids as $id) 
+        if($ids != null)
         {
-            $pertvara = Pertvara::find($id);
-            $patalpa = Patalpa::find($pertvara->patalpos_id);
-            $patalpa->pertvaros = $patalpa->pertvaros - 1;
-            $patalpa->save();
+            foreach($ids as $id) 
+            {
+                $pertvara = Pertvara::find($id);
+                
+                $this->authorize('delete', $pertvara);
+
+                $patalpa = Patalpa::find($pertvara->patalpos_id);
+                $patalpa->pertvaros = $patalpa->pertvaros - 1;
+                $patalpa->save();
+            }
         }
         Pertvara::destroy($ids);
 

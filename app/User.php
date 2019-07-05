@@ -43,4 +43,8 @@ class User extends Authenticatable
 
     protected $primaryKey = 'id';
 
+    public function permissions() {
+        return $this->hasMany('App\UserPermission', 'user_id', 'id');
+    }
+
 }

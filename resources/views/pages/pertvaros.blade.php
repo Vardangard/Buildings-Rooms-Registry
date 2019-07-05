@@ -7,27 +7,34 @@
     <li class="breadcrumb-item active">Pertvarų registras</li>
 </ol>
 @include('inc.messages1')
+<div style="min-width: 1000px;">
+    <div class="card">
+        <div class="card-heading bg-dark">
+            <!-- HEADING -->
+            <h5 class="text-center" style="position:relative">
+                @include('modals.pertvarosSearchModal')
+                
+                @can('create', \App\Patalpa::class)
+                    @include('modals.patalposAddNewModal')
+                @endcan
+                
+                @can('create', \App\Pertvara::class)
+                    <a href="/pertvaros/create" class="btn btn-light <?php echo $d = (App\Patalpa::count() < 1) ? 'disabled"' : '' ?>"  style="left:381px;position:absolute">Įvesti Pertvara</a>
+                @endcan
+                
+                <!-- Form Delete -->
+                <form method="POST">
+                    @csrf
+                    @method('DELETE')    
 
-<div class="card">
-    <div class="card-heading bg-dark">
-        <!-- HEADING -->
-        <h5 class="text-center" style="position:relative">
-            @include('modals.patalposAddNewModal')
-
-            <a href="/pertvaros/create" class="btn btn-light <?php echo $d = (App\Patalpa::count() < 1) ? 'disabled"' : '' ?>"  style="left:200px;position:absolute">Įvesti Pertvara</a>
-
-            @include('modals.pertvarosSearchModal')
-            <!-- Form Delete -->
-            <form method="POST">
-                @csrf
-                @method('DELETE')    
-
-            <!-- Title -->
-            <span style="color:white">Patalpų dalių paieškos rezultatai</span>
-            
-            <button formaction="/delete-all-pertvaras" type="submit"  class="btn btn-danger"  style="right:20px;position:absolute">Ištrinti Pasirinktas Patalpų Dalis</button>    
-        </h5>
-         <!-- END HEADING -->
+                <!-- Title -->
+                <span style="color:white">Patalpų dalių paieškos rezultatai</span>
+                @can('elements', \App\Pertvara::class)
+                    <button formaction="/delete-all-pertvaras" type="submit"  class="btn btn-danger"  style="right:20px;position:absolute">Ištrinti Pasirinktas Patalpų Dalis</button>    
+                @endcan
+            </h5>
+            <!-- END HEADING -->
+        </div>
     </div>
 </div>
     <!-- Card Block -->
@@ -38,7 +45,9 @@
                 @if(count($pertvaros) > 0)
                 <thead class="thead-dark">
                     <tr>
-                        <th><input type="checkbox" class="selectall"></th>
+                        @can('elements', \App\Pertvara::class)
+                            <th><input type="checkbox" class="selectall"></th>
+                        @endcan
                         <th>Pastatas</th>
                         <th>Aukštas</th>
                         <th>Patalpos Nr.</th>
@@ -53,19 +62,23 @@
                         <th>Pradžia</th>
                         <th>Pabaiga</th>
                         <th>Paskutinį kartą redaguotas</th>
-                        <th>Veiksmas</th>
+                        @can('elements', \App\Pertvara::class)
+                            <th>Veiksmas</th>
+                        @endcan
                     </tr>
                 </thead> 
                 <tbody>                    
                     
                         @foreach($pertvaros as $pertvara)
                             <tr>
-                                <td><input type="checkbox" name="ids[]" class="selectbox" value="{{ $pertvara->id }}"></td>
+                                @can('elements', \App\Pertvara::class)
+                                    <td><input type="checkbox" name="ids[]" class="selectbox" value="{{ $pertvara->id }}"></td>
+                                @endcan
                                 <td style="width: 200px;">{{ $pertvara->patalpa->pastatas->pavadinimas }}</td>
                                 <td>{{ $pertvara->patalpa->aukstas }}</td>
                                 <td>{{ $pertvara->patalpa->nr }}</td>
                                 <td style="width: 150px;">{{ $pertvara->tipas }}</td>
-                                <td>{{ $pertvara->pavadinimas }}</td>
+                                <td style="width: 160px;">{{ $pertvara->pavadinimas }}</td>
                                 <td>{{ $pertvara->nr }}</td>
                                 <td>{{ $pertvara->talpa }}</td>
                                 <td style="width: 160px;">{{ $pertvara->atsakingas ?? 'Deividas Januškevičius' }}</td>
@@ -73,13 +86,18 @@
                                 <td>{{ $pertvara->kvadratura }} m2</td>
                                 <td style="width: 150px;">{{ $pertvara->busena }}</td>
                                 <td style="width: 100px;">{{ \Carbon\Carbon::parse($pertvara->startdate)->format('Y-m-d') }}</td>
-                                <td style="width: 100px;">{{ \Carbon\Carbon::parse($pertvara->enddate)->format('Y-m-d') ?? '-' }}</td>
+                                <td style="width: 100px;">{{ $date = $pertvara->enddate ? \Carbon\Carbon::parse($pertvara->enddate)->format('Y-m-d') : '-' }}</td>
                                 <td style="width: 170px;">{{ $pertvara->updated_at }}</td>
 
-                                <td style="width: 110px;">
-                                    <a class="btn" id="redaguoti" href="/pertvaros/{{ $pertvara->id }}/edit"><i class="fa fa-edit"></i></a>
-                                    <button class="btn" id="trinti" formaction="{{ action('PertvarosController@destroy', $pertvara->id) }}" type="submit"><i class="fa fa-trash"></i></button>
-                                </td>
+                                @can('elements', \App\Pertvara::class)
+                                    <td style="min-width: 110px;">
+                                    
+                                            <a class="btn" id="redaguoti" href="/pertvaros/{{ $pertvara->id }}/edit"><i class="fa fa-edit"></i></a>
+                                    
+                                    
+                                        <button class="btn" id="trinti" formaction="{{ action('PertvarosController@destroy', $pertvara->id) }}" type="submit"><i class="fa fa-trash"></i></button>
+                                    </td>
+                                @endcan
                             </tr>
                         @endforeach        
                 </tbody>

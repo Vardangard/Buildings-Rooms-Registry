@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Pastatas;
 use DB; 
+use App\User; 
+use Auth;
 
 class PastataiController extends Controller
 {
@@ -20,6 +22,16 @@ class PastataiController extends Controller
      */
     public function index()
     {
+        $users = User::whereHas('permissions', function ($query) {
+            $query->where('permission_id', '=', env("P_ADMIN"));
+        })->get();
+
+        //dd($users);
+        //dd(env("P_REGULAR"));
+
+        //$this->authorize('create', \App\Pastatas::class);
+
+
         $pastatai = Pastatas::orderBy('id', 'desc')->paginate(25);
         $kadastrai = Pastatas::pluck('kadastronr', 'kadastronr');
         $kodai = Pastatas::pluck('kodas', 'kodas');
@@ -35,7 +47,7 @@ class PastataiController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
@@ -46,18 +58,21 @@ class PastataiController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', \App\Pastatas::class);
+
         $this->validate($request, [
-            'kadastronr' => 'required',
+            'kadastronr' => 'required|max:30',
             'kodas' => 'required',
             'pavadinimas' => 'required',
             'adresas' => 'required',
             'aukstai' => 'required',
-            'padaliniai' => 'required',
             'miestas' => 'required',
             'busena' => 'required', 
-            'startdate' => 'required',
+            'startdate' => 'required|date|before_or_equal:today',
+            'enddate' => 'date|after_or_equal:today|nullable'
         ]);
 
+       
         try {
 
             $pastatas = new Pastatas;
@@ -107,6 +122,7 @@ class PastataiController extends Controller
     public function edit($id)
     {
         $pastatas = Pastatas::find($id);
+        $this->authorize('update', $pastatas);
         return view('pages.redaguotiPastata')->with('pastatas', $pastatas);
     }
 
@@ -120,16 +136,19 @@ class PastataiController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'kadastronr' => 'required',
-            'kodas' => 'required',
-            'pavadinimas' => 'required',
-            'adresas' => 'required',
+            'kadastronr' => 'required|max:30',
+            'kodas' => 'required|max:10',
+            'pavadinimas' => 'required|max:150',
+            'adresas' => 'required|max:50',
             'aukstai' => 'required',
-            'padaliniai' => 'required',
-            'miestas' => 'required',
-            'busena' => 'required', 
-            'startdate' => 'required'
+            'padaliniai' => 'required|max:500',
+            'miestas' => 'required|max:15',
+            'busena' => 'required|max:30', 
+            'startdate' => 'required|date|before_or_equal:today',
+            'enddate' => 'date|after_or_equal:today|nullable'
         ]);
+
+        try {
 
         $pastatas = Pastatas::find($id);
         $pastatas->kadastronr = $request->input('kadastronr');
@@ -149,6 +168,11 @@ class PastataiController extends Controller
         $pastatas->darbo_laikas_sek_s = $request->input('sek_s');
         $pastatas->darbo_laikas_sek_e = $request->input('sek_e');
         $pastatas->save();
+        
+        } catch(\Yajra\Pdo\Oci8\Exceptions\Oci8Exception $ex)
+        {
+            return back()->withError('Pastatas su panašiu pavadinimu , adresu arba kodu jau egzistuoja');
+        }
 
         return redirect('/pastatai')->with('success', 'Pastatas sėkmingai redaguotas');
     }
@@ -162,6 +186,9 @@ class PastataiController extends Controller
     public function destroy($id)
     {
         $pastatas = Pastatas::find($id);
+
+        $this->authorize('delete', $pastatas);
+
         $pastatas->delete();
         return redirect('/pastatai')->with('success', 'Pastatas ištrintas');
     }
@@ -169,6 +196,9 @@ class PastataiController extends Controller
     public function deleteAll(Request $request) 
     {
         $ids = $request->get('ids');
+        //$collection = Pastatas::find($ids);
+        //$this->authorize('delete', $collection);
+        $this->authorize('create', \App\Pastatas::class);
         Pastatas::destroy($ids);
         return redirect('/pastatai')->with('success', 'Pasirinkti pastatai ištrinti');
     }
