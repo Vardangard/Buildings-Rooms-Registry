@@ -14,24 +14,16 @@
             <h5 class="text-center" style="position:relative">
                 @include('modals.pertvarosSearchModal')
                 
-                @can('create', \App\Patalpa::class)
-                    @include('modals.patalposAddNewModal')
-                @endcan
-                
                 @can('create', \App\Pertvara::class)
-                    <a href="/pertvaros/create" class="btn btn-light <?php echo $d = (App\Patalpa::count() < 1) ? 'disabled"' : '' ?>"  style="left:381px;position:absolute">Įvesti Pertvara</a>
+                    <a href="/pertvaros/create" class="btn btn-light <?php echo $d = (App\Patalpa::count() < 1) ? 'disabled"' : '' ?>"  style="left:200px;position:absolute">Įvesti Pertvara</a>
                 @endcan
                 
-                <!-- Form Delete -->
-                <form method="POST">
-                    @csrf
-                    @method('DELETE')    
-
+                
                 <!-- Title -->
                 <span style="color:white">Patalpų dalių paieškos rezultatai</span>
-                @can('elements', \App\Pertvara::class)
+                <!--@can('elements', \App\Pertvara::class)
                     <button formaction="/delete-all-pertvaras" type="submit"  class="btn btn-danger"  style="right:20px;position:absolute">Ištrinti Pasirinktas Patalpų Dalis</button>    
-                @endcan
+                @endcan-->
             </h5>
             <!-- END HEADING -->
         </div>
@@ -41,13 +33,14 @@
 <div class="card">
     <div class="card-block">
         <div class="table-responsive">
-            <table class="table table-bordered table-hover auto">
-                @if(count($pertvaros) > 0)
+            @if(count($pertvaros) > 0)
+            <table class="table table-bordered table-hover auto" id="pertvaros_table">
+                
                 <thead class="thead-dark">
                     <tr>
-                        @can('elements', \App\Pertvara::class)
-                            <th><input type="checkbox" class="selectall"></th>
-                        @endcan
+                        <!--@can('elements', \App\Pertvara::class)
+                            <th class="text-center"><input type="checkbox" class="selectall"></th>
+                        @endcan-->
                         <th>Pastatas</th>
                         <th>Aukštas</th>
                         <th>Patalpos Nr.</th>
@@ -71,10 +64,10 @@
                     
                         @foreach($pertvaros as $pertvara)
                             <tr>
-                                @can('elements', \App\Pertvara::class)
-                                    <td><input type="checkbox" name="ids[]" class="selectbox" value="{{ $pertvara->id }}"></td>
-                                @endcan
-                                <td style="width: 200px;">{{ $pertvara->patalpa->pastatas->pavadinimas }}</td>
+                                <!--@can('elements', \App\Pertvara::class)
+                                    <td class="text-center"><input type="checkbox" name="ids[]" class="selectbox" value="{{ $pertvara->id }}"></td>
+                                @endcan-->
+                                <td style="width: 200px !important;">{{ $pertvara->patalpa->pastatas->pavadinimas }}</td>
                                 <td>{{ $pertvara->patalpa->aukstas }}</td>
                                 <td>{{ $pertvara->patalpa->nr }}</td>
                                 <td style="width: 150px;">{{ $pertvara->tipas }}</td>
@@ -90,30 +83,35 @@
                                 <td style="width: 170px;">{{ $pertvara->updated_at }}</td>
 
                                 @can('elements', \App\Pertvara::class)
-                                    <td style="min-width: 110px;">
-                                    
-                                            <a class="btn" id="redaguoti" href="/pertvaros/{{ $pertvara->id }}/edit"><i class="fa fa-edit"></i></a>
-                                    
-                                    
-                                        <button class="btn" id="trinti" formaction="{{ action('PertvarosController@destroy', $pertvara->id) }}" type="submit"><i class="fa fa-trash"></i></button>
-                                    </td>
+                                    <!-- Form Delete -->
+                                    <form method="POST">
+                                        @csrf
+                                        @method('DELETE')    
+                                        <td style="min-width: 110px;">
+                                            @can('update', $pertvara)
+                                                <a class="btn" id="redaguoti" href="/pertvaros/{{ $pertvara->id }}/edit"><i class="fa fa-edit"></i></a>
+                                            @endcan
+                                            @can('delete', $pertvara)
+                                                <button class="btn" onclick="return confirm('Ar tikrai norite ištrinti šią pertvarą?')" id="trinti" formaction="{{ action('PertvarosController@destroy', $pertvara->id) }}" type="submit"><i class="fa fa-trash"></i></button>
+                                            @endcan
+                                        </td>
+                                    </form>
                                 @endcan
                             </tr>
                         @endforeach        
                 </tbody>
-                @else
-                    <p class="alert alert-danger" style="border-radius:0px; margin-bottom:0px">Duomenų Nėra</p>
-                @endif
+                
             </table>
-            <div> <!--class="d-flex justify-content-center"-->
-                {{ $pertvaros->links() }}
-            </div>
+            @else
+                <p class="alert alert-danger" style="border-radius:0px; margin-bottom:0px">Įrašų nerasta!</p>
+            @endif
         </div>
     </div>
 </div>
 
-</form>
+<!-- SCRIPTS -->
 
+<!-- CHECKBOX SELECT 
 <script type="text/javascript">
     $('.selectall').click( function () {
         $('.selectbox').prop('checked', $(this).prop('checked'));
@@ -134,7 +132,45 @@
             $('.selectall2').prop('checked', false);
         }
     })
+</script>-->
+
+<script>
+    $(document).ready( function () {
+        $.fn.dataTable.ext.classes.sPageButton = 'btn btn-light';
+        $('#pertvaros_table').DataTable({
+            "language": {
+                "sEmptyTable":      "Lentelėje nėra duomenų",
+                "sInfo":            "Rodomi įrašai nuo _START_ iki _END_ iš _TOTAL_ įrašų",
+                "sInfoEmpty":       "Rodomi įrašai nuo 0 iki 0 iš 0",
+                "sInfoFiltered":    "(atrinkta iš _MAX_ įrašų)",
+                "sInfoPostFix":     "",
+                "sInfoThousands":   " ",
+                "sLengthMenu":      "Rodyti _MENU_ įrašus",
+                "sLoadingRecords":  "Įkeliama...",
+                "sProcessing":      "Apdorojama...",
+                "sSearch":          "Ieškoti:",
+                "searchPlaceholder": "Ieškoti",
+                "sThousands":       " ",
+                "sUrl":             "",
+                "sZeroRecords":     "<span style=\"padding: 20px; margin: 0px; font-size: 20px; \">Įrašų nerasta</span>",
+            
+                "oPaginate": {
+                    "sFirst": "Pirmas",
+                    "sPrevious": "Ankstesnis",
+                    "sNext": "Tolimesnis",
+                    "sLast": "Paskutinis"
+                }
+            },
+            "aoColumnDefs": [
+                { "bSortable": false, "aTargets": [ 14 ] }, 
+                { "bSearchable": false, "aTargets": [ 14 ] },
+                
+            ],
+            "order": []
+        });
+    });
 </script>
+    
 
     
 @endsection

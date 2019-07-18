@@ -1,5 +1,5 @@
 <!-- Ivesti nauja pastata -->
-<button class="btn btn-light" style="left:200px;position:absolute" data-toggle="modal" data-target="#addNewModal">Įvesti nauja pastatą</button>
+<button class="btn btn-light" style="left:20px;position:absolute" data-toggle="modal" data-target="#addNewModal">Įvesti nauja pastatą</button>
 <!-- Add New Modal -->
 <div class="modal fade" id="addNewModal" tabindex="-1" role="dialog" aria-labelledby="addNewModalLabel" aria-hidden="true" >
     <div class="modal-dialog modal-lg" role="document">

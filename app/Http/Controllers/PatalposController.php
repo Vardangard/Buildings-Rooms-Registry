@@ -24,10 +24,12 @@ class PatalposController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', \App\Patalpa::class);
+
         $pastatai = Pastatas::pluck('pavadinimas', 'id');
         #$pastatu_patalpos = Patalpa::with('pastatas')->get()->pluck('pastatas.pavadinimas', 'patalpa.id')->unique();
         $nr = Patalpa::pluck('nr', 'nr');
-        $patalpos = Patalpa::orderBy('created_at', 'desc')->paginate(25);
+        $patalpos = Patalpa::orderBy('created_at', 'desc')->get();
         $pertvaros = Pertvara::all();
         return view('pages.patalpos', compact('patalpos', 'pertvaros', 'pastatai', 'nr'));
     }
@@ -71,10 +73,10 @@ class PatalposController extends Controller
         {
             return back()->withError($patalpa->pastatas->pavadinimas.' pastate '.$request->input('nr').' patalpos numeris jau egzistuoja');
             /*return back()->withError(' 
-            ─▄▀▀▀▀▄─█──█────▄▀▀█─▄▀▀▀▀▄─█▀▀▄\n
-            ─█────█─█──█────█────█────█─█──█
-            ─█────█─█▀▀█────█─▄▄─█────█─█──█
-            ─▀▄▄▄▄▀─█──█────▀▄▄█─▀▄▄▄▄▀─█▄▄▀
+            ─▄▀▀▀▀▄─█──█────▄▀▀█─▄▀▀▀▀▄─█▀▀▄\r\n
+            ─█────█─█──█────█────█────█─█──█\r\n
+            ─█────█─█▀▀█────█─▄▄─█────█─█──█\r\n
+            ─▀▄▄▄▄▀─█──█────▀▄▄█─▀▄▄▄▄▀─█▄▄▀\r\n
              
             ─────────▄██████▀▀▀▀▀▀▄
             ─────▄█████████▄───────▀▀▄▄
@@ -129,9 +131,7 @@ class PatalposController extends Controller
     public function edit($id)
     {
         $patalpa = Patalpa::find($id);
-
         $this->authorize('update', $patalpa);
-
         $pastatai = Pastatas::pluck('pavadinimas', 'id');
         return view('pages.redaguotiPatalpa', compact('patalpa', 'pastatai'));
     }
@@ -159,10 +159,16 @@ class PatalposController extends Controller
         $patalpa->nr = $request->input('nr');
         $patalpa->save();
 
-        } catch(\Illuminate\Database\QueryException $ex)
+        } 
+        catch(\Illuminate\Database\QueryException $ex)
         {
-            return back()->withError($ex);
+            return back()->withError('"'.$patalpa->pastatas->pavadinimas.'" pastate patalpa su numeriu "'.$patalpa->nr.'" jau egzistuoja!');
         }
+        catch(\Exception $ex)
+        {
+            return back()->withError('Klaida');
+        }
+   
 
         return redirect('/patalpos')->with('success', 'Patalpa sėkmingai redaguota');
     }
@@ -186,6 +192,7 @@ class PatalposController extends Controller
     public function deleteAll(Request $request) 
     {
         $ids = $request->get('ids');
+        dd($ids);
         Patalpa::destroy($ids);
         return redirect('/patalpos')->with('success', 'Pasirinktos patalpos ištrintos');
     }
@@ -211,9 +218,9 @@ class PatalposController extends Controller
                 $query->where('pertvaros', 'like', '%'.$pertvarosSk.'%');
             }  
         })
-        ->paginate(25);
+        ->get();
 
-        $patalpos->appends(['pastatai_id' => $pastato_id, 'aukstas' => $aukstas, 'pertvaros' => $pertvarosSk, 'nr' => $patalposNr]);
+        //$patalpos->appends(['pastatai_id' => $pastato_id, 'aukstas' => $aukstas, 'pertvaros' => $pertvarosSk, 'nr' => $patalposNr]);
 
         $pastatai = Pastatas::pluck('pavadinimas', 'id');
         $nr = Patalpa::pluck('nr', 'nr');

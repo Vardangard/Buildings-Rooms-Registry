@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\User;
 use App\Pastatas;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Auth;
 
 class PastatasPolicy
 {
@@ -18,7 +19,10 @@ class PastatasPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        if(!$user->permissions->where('permission_id', env('P_ADMIN'))->isEmpty() || !$user->permissions->where('permission_id', env("P_REGULAR"))->isEmpty()){
+            return true;
+        } 
+        return false;
     }
 
     /**
@@ -41,7 +45,7 @@ class PastatasPolicy
      */
     public function create(User $user)
     {
-        if(!$user->permissions->where('permission_id', 71)->isEmpty()){
+        if(!$user->permissions->where('permission_id', env('P_ADMIN'))->isEmpty()){
             return true;
         } 
         return false;
@@ -49,7 +53,7 @@ class PastatasPolicy
 
     public function elements(User $user)
     {
-        if(!$user->permissions->where('permission_id', 71)->isEmpty() || !$user->permissions->where('permission_id', env("P_REGULAR"))->isEmpty()){
+        if(!$user->permissions->where('permission_id', env('P_ADMIN'))->isEmpty() || !$user->permissions->where('permission_id', env("P_REGULAR"))->isEmpty()){
             return true;
         } 
         return false;
@@ -65,8 +69,9 @@ class PastatasPolicy
      */
     public function update(User $user, Pastatas $pastatas)
     {
-        if(!$user->permissions->where('permission_id', 71)->isEmpty() || !$user->permissions->where('permission_id', env("P_REGULAR"))->isEmpty()){
-            return true;
+        if(!$user->permissions->where('permission_id', env('P_ADMIN'))->isEmpty() || !$user->permissions->where('permission_id', env("P_REGULAR"))->isEmpty()){
+            if(in_array($pastatas->id, Auth::user()->pastatai->pluck('id')->toArray()) || !$user->permissions->where('permission_id', env('P_ADMIN'))->isEmpty())
+                return true;
         } 
         return false;
     }
@@ -80,7 +85,7 @@ class PastatasPolicy
      */
     public function delete(User $user, Pastatas $pastatas)
     {
-        if(!$user->permissions->where('permission_id', 71)->isEmpty()){
+        if(!$user->permissions->where('permission_id', env('P_ADMIN'))->isEmpty()){
             return true;
         } 
         return false;

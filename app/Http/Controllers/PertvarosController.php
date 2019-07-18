@@ -24,11 +24,13 @@ class PertvarosController extends Controller
     {
         #$patalpos = Patalpa::pluck('nr', 'id');
 
+        $this->authorize('viewAny', \App\Pertvara::class);
+
         $pastatai = Pastatas::pluck('pavadinimas', 'id');
         $pastatu_patalpos = Patalpa::with('pastatas')->get()->pluck('pastatas.pavadinimas', 'patalpa.id')->unique();
         $plnr = Patalpa::pluck('nr', 'nr');
         $numeris = Pertvara::pluck('nr', 'nr');
-        $pertvaros = Pertvara::orderBy('updated_at', 'desc')->paginate(25);
+        $pertvaros = Pertvara::orderBy('updated_at', 'desc')->get();
         return view('pages.pertvaros', compact('pertvaros', 'pastatai', 'plnr', 'numeris'));
     }
 
@@ -63,7 +65,7 @@ class PertvarosController extends Controller
             'talpa' => 'required|max:8',
             'tipas' => 'required|max:30',
             'startdate' => 'required|date|before_or_equal:today',
-            'enddate' => 'date|after_or_equal:today|nullable',
+            'enddate' => 'date|after_or_equal:startdate|nullable',
             'busena' => 'required',
             'pavadinimas' => 'required|max:150',
         ]);
@@ -154,9 +156,9 @@ class PertvarosController extends Controller
             'talpa' => 'required|max:8',
             'tipas' => 'required|max:30',
             'startdate' => 'required|date|before_or_equal:today',
-            'enddate' => 'date|after_or_equal:today|nullable',
+            'enddate' => 'date|after_or_equal:startdate|nullable',
             'busena' => 'required',
-            'pavadinimas' => 'required|max:50',
+            'pavadinimas' => 'required|max:150',
         ]);
 
 
@@ -326,7 +328,7 @@ class PertvarosController extends Controller
             if($kondicionierius != 0) {
                 $query->whereNotNull('kondicionierius');
             }  
-        })->paginate(20);
+        })->get();
         
 
         return view('pages.pertvaros', ['pertvaros' => $pertvaros], compact('pastatai', 'pastatu_patalpos', 'plnr', 'numeris', 'patalpos'));

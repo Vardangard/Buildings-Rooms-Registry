@@ -12,18 +12,13 @@
     <div class="card-heading bg-dark">
         <!-- HEADING -->
         <h5 class="text-center" style="position:relative">
-            @include('modals.patalposSearchModal')
-
-            <!-- Form Delete -->
-            <form method="POST">
-                @csrf
-                @method('DELETE')    
+            @can('create', \App\Patalpa::class)
+                @include('modals.patalposAddNewModal')
+            @endcan
+              
 
             <!-- Title -->
             <span style="color:white">Patalpų paieškos rezultatai</span>
-            @can('create', \App\Patalpa::class)
-                <button formaction="/delete-all-patalpas" type="submit"  class="btn btn-danger"  style="right:20px;position:absolute">Ištrinti Pasirinktas Patalpas</button>    
-            @endcan
         </h5>
          <!-- END HEADING -->
     </div>
@@ -33,12 +28,12 @@
     <div class="card-block">
         <div class="table-responsive">
             @if(count($patalpos) > 0)
-            <table class="table table-bordered table-hover auto">
+            <table class="table table-bordered table-hover auto" id="patalpos_table">
                 <thead class="thead-dark">
                     <tr>
-                        @can('elements', \App\Patalpa::class)
-                            <th><input type="checkbox" class="selectall"></th>
-                        @endcan
+                        <!--@can('elements', \App\Patalpa::class)
+                            <th class="text-center"><input type="checkbox" class="selectall"></th>
+                        @endcan-->
                         <th>Pastatas</th>
                         <th>Aukštas</th>
                         <th>Patalpos Nr.</th>
@@ -53,9 +48,9 @@
                     
                         @foreach($patalpos as $patalpa)
                             <tr>
-                                @can('elements', \App\Patalpa::class)
-                                    <td style="width: 12px;"><input type="checkbox" name="ids[]" class="selectbox" value="{{ $patalpa->id }}"></td>
-                                @endcan
+                                <!--@can('elements', \App\Patalpa::class)
+                                    <td style="width: 12px;" class="text-center"><input type="checkbox" name="ids[]" class="selectbox" value="{{ $patalpa->id }}">{{$patalpa->id}}</td>
+                                @endcan-->
                                 <td>{{ $patalpa->pastatas->pavadinimas }}</td>
                                 <td>{{ $patalpa->aukstas }}</td>
                                 <td>{{ $patalpa->nr }}</td>
@@ -65,35 +60,40 @@
                                         {{ $patalpa->pertvaros }}
                                     @endif
                                 </td>
-                                <td>{{ $patalpa->updated_at }}</td> <!--App\Pertvara::where('patalpos_id', 'like', $patalpa->id)->count()-->
-
+                                <td>{{ $patalpa->updated_at }}</td> 
+    
                                 @can('elements', \App\Patalpa::class)
+                                    <!-- Form Delete -->
+                                        <form method="POST">
+                                            @csrf
+                                            @method('DELETE')  
                                     <td style="width: 110px;">
                                         @can('update', $patalpa)
                                             <a class="btn" id="redaguoti" href="/patalpos/{{ $patalpa->id }}/edit"><i class="fa fa-edit"></i></a>
                                         @endcan
+                                        
                                         @can('delete', $patalpa)
-                                            <button class="btn" id="trinti" formaction="{{ action('PatalposController@destroy', $patalpa->id) }}" type="submit"><i class="fa fa-trash"></i></button>
-                                        @endcan
+                                            <button class="btn" onclick="return confirm('Ar tikrai norite ištrinti šią patalpą?')" id="trinti" formaction="{{ action('PatalposController@destroy', $patalpa->id) }}" type="submit"><i class="fa fa-trash"></i></button>
+                                        @endcan   
                                     </td>
+                                    </form>
                                 @endcan
+                        
                             </tr>
-                        @endforeach
+                        @endforeach     
                 </tbody>
-                @else
-                    <p class="alert alert-danger" style="border-radius:0px; margin-bottom:0px">Duomenų Nėra</p>
-                @endif
             </table>
-            <br/>
-            <div>  <!--class="d-flex justify-content-center"-->
-                {{ $patalpos->links() }}
-            </div>
+            @else
+                <p class="alert alert-danger" style="border-radius:0px; margin-bottom:0px">Įrašų nerasta!</p>
+            @endif
         </div>
     </div>
 </div>
 
-</form>
 
+<!-- SCRIPTS -->
+
+<!-- CHECKBOX SELECT
 <script type="text/javascript">
     $('.selectall').click( function () {
         $('.selectbox').prop('checked', $(this).prop('checked'));
@@ -114,6 +114,43 @@
             $('.selectall2').prop('checked', false);
         }
     })
+</script>-->
+
+<script>
+    $(document).ready( function () {
+        $.fn.dataTable.ext.classes.sPageButton = 'btn btn-light';
+        $('#patalpos_table').DataTable({
+            "language": {
+                "sEmptyTable":      "Lentelėje nėra duomenų",
+                "sInfo":            "Rodomi įrašai nuo _START_ iki _END_ iš _TOTAL_ įrašų",
+                "sInfoEmpty":       "Rodomi įrašai nuo 0 iki 0 iš 0",
+                "sInfoFiltered":    "(atrinkta iš _MAX_ įrašų)",
+                "sInfoPostFix":     "",
+                "sInfoThousands":   " ",
+                "sLengthMenu":      "Rodyti _MENU_ įrašus",
+                "sLoadingRecords":  "Įkeliama...",
+                "sProcessing":      "Apdorojama...",
+                "sSearch":          "Ieškoti:",
+                "searchPlaceholder": "Ieškoti",
+                "sThousands":       " ",
+                "sUrl":             "",
+                "sZeroRecords":     "<span style=\"padding: 20px; margin: 0px; font-size: 20px; \">Įrašų nerasta</span>",
+            
+                "oPaginate": {
+                    "sFirst": "Pirmas",
+                    "sPrevious": "Ankstesnis",
+                    "sNext": "Tolimesnis",
+                    "sLast": "Paskutinis"
+                }
+            },
+            "aoColumnDefs": [
+                { "bSortable": false, "aTargets": [ 5 ] }, 
+                { "bSearchable": false, "aTargets": [ 5 ] },
+                
+            ],
+            "order": []
+        });
+    });
 </script>
 
     

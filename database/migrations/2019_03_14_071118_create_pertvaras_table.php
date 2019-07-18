@@ -37,7 +37,7 @@ class CreatePertvarasTable extends Migration
             $table->string('igarsinimas', 50)->nullable();
             $table->string('ekranas', 50)->nullable();
             $table->string('internetas', 50)->nullable();
-            $table->string('pavadinimas', 50);
+            $table->string('pavadinimas', 150);
             $table->string('projektinis', 10)->nullable();
             $table->string('kondicionierius', 50)->nullable();
             $table->string('ekr_dydis', 50)->nullable();

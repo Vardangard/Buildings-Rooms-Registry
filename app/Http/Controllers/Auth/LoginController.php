@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -33,7 +34,7 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest')->except('logout');
+        $this->middleware('guest')->except('logout', 'unauth');
     }
 
     protected function attemptLogin(Request $request)
@@ -53,8 +54,21 @@ class LoginController extends Controller
         $this->guard()->logout();
 
         $request->session()->invalidate();
+        
+        return redirect('/login')->with('success', 'Sėkmingai atsijungėte!');
+    }
 
-        return redirect('/');
+    public function unauth(Request $request)
+    {
+        $broker = new \Zefy\LaravelSSO\LaravelSSOBroker;
+
+        $broker->logout();
+
+        $this->guard()->logout();
+
+        $request->session()->invalidate();
+        
+        return redirect('/login')->with('danger', 'Jums leidimas nesuteiktas!');
     }
 
     public function username()

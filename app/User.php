@@ -47,4 +47,8 @@ class User extends Authenticatable
         return $this->hasMany('App\UserPermission', 'user_id', 'id');
     }
 
+    public function pastatai() {
+        return $this->belongsToMany(Pastatas::class, 'assigns');
+    }
+    
 }

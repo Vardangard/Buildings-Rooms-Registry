@@ -15,17 +15,13 @@
             @can('create', \App\Pastatas::class)
                 @include('modals.pastataiAddNewModal')
             @endcan
-            @include('modals.pastataiSearchModal')
-            <!-- Form Delete -->
-            <form method="POST">
-                @csrf
-                @method('DELETE')    
 
             <!-- Title -->
             <span style="color:white">Pastatų paieškos rezultatai</span>
-            @can('create', \App\Pastatas::class)
-                <button formaction="/delete-all" type="submit"  class="btn btn-danger"  style="right:20px;position:absolute">Ištrinti Pasirinktus Pastatus</button>    
-            @endcan
+             
+            <!--@can('create', \App\Pastatas::class)           
+                <button formaction="/delete-all" type="submit"  class="btn btn-danger"  style="right:20px;position:absolute">Ištrinti Pasirinktus Pastatus</button>   
+            @endcan-->
         </h5>
          <!-- END HEADING -->
     </div>
@@ -34,13 +30,14 @@
     <!-- Card Block -->
     <div class="card-block">
         <div class="table-responsive">
-            <table class="table table-bordered table-hover auto">
-                @if(count($pastatai) >= 1)
+            @if(count($pastatai) >= 1)
+            <table class="table table-bordered table-hover auto" id="pastatai_table">
+                
                 <thead class="thead-dark">
                     <tr>
-                        @can('elements', \App\Pastatas::class)
-                            <th><input type="checkbox" class="selectall"></th>
-                        @endcan 
+                        <!--@can('elements', \App\Pastatas::class)
+                            <th class="text-center"><input type="checkbox" class="selectall"></th>
+                        @endcan--> 
                         <th>Kodas</th>
                         <th>Pavadinimas</th>
                         <th>Adresas</th>
@@ -61,11 +58,11 @@
                     
                         @foreach($pastatai as $pastatas)
                             <tr>
-                                @can('elements', \App\Pastatas::class)
-                                    <td style="width: 12px;"><input type="checkbox" name="ids[]" class="selectbox" value="{{ $pastatas->id }}"></td>
-                                @endcan
+                                <!--@can('elements', \App\Pastatas::class)
+                                    <td style="width: 12px;" class="text-center"><input type="checkbox" name="ids[]" class="selectbox" value="{{ $pastatas->id }}"></td>
+                                @endcan-->
                                 <td>{{ $pastatas->kodas }}</td>
-                                <td>{{ $pastatas->pavadinimas }}</td>
+                                <td style="width: 300px;">{{ $pastatas->pavadinimas }}</td>
                                 <td>{{ $pastatas->adresas }}</td>
                                 <td>{{ $pastatas->aukstai }}</td>
                                 <td>{{ $pastatas->kadastronr }}</td>
@@ -79,33 +76,40 @@
                                     Šeštadienis: {{ $pastatas->darbo_laikas_ses_s }} - {{ $pastatas->darbo_laikas_ses_e }}<br/>
                                     Sekmadienis: {{ $pastatas->darbo_laikas_sek_s }} - {{ $pastatas->darbo_laikas_sek_e }}
                                 </td>
+
                                 @can('elements', \App\Pastatas::class)
-                                    <td style="width: 110px;">	
-                                        @can('update', $pastatas)
-                                            <a class="btn" id="redaguoti" href="/pastatai/{{ $pastatas->id }}/edit"><i class="fa fa-edit"></i></a>
-                                        @endcan
-                                        @can('delete', $pastatas)
-                                            <button class="btn" id="trinti" formaction="{{ action('PastataiController@destroy', $pastatas->id) }}" type="submit"><i class="fa fa-trash"></i></button>
-                                        @endcan
-                                    </td>
+                                    <!-- Form Delete -->
+                                    <form method="POST">
+                                            @csrf
+                                            @method('DELETE') 
+                                        <td style="width: 110px;">	
+                                            @can('update', $pastatas)
+                                                <a class="btn" id="redaguoti" href="/pastatai/{{ $pastatas->id }}/edit"><i class="fa fa-edit"></i></a>
+                                            @endcan
+                                            @can('delete', $pastatas)
+                                                <button class="btn" onclick="return confirm('Ar tikrai norite ištrinti šį pastatą?')"  id="trinti" formaction="{{ action('PastataiController@destroy', $pastatas->id) }}" type="submit"><i class="fa fa-trash"></i></button>
+                                            @endcan
+                                        </td>
+                                    </form>
                                 @endcan
+
                             </tr>
                         @endforeach
                     
                 </tbody>
-                @else
-                    <p class="alert alert-danger" style="border-radius:0px; margin-bottom:0px">Duomenų Nėra!</p>
-                @endif
-            </table>
-            <div> <!--class="d-flex justify-content-center"-->
-                <br/>
-                {{ $pastatai->links() }}
-            </div> 
+               
+            </table> 
+            @else
+                <p class="alert alert-danger" style="border-radius:0px; margin-bottom:0px">Įrašų nerasta!</p>
+            @endif
         </div>
     </div>
 </div>
-</form>
 
+
+<!-- SCRIPTS -->
+
+<!-- CHECKBOX SELECT
 <script type="text/javascript">
     $('.selectall').click( function () {
         $('.selectbox').prop('checked', $(this).prop('checked'));
@@ -125,7 +129,46 @@
             $('.selectall').prop('checked', false);
             $('.selectall2').prop('checked', false);
         }
-    })
+    });
+</script>-->
+
+<script>
+    $(document).ready( function () {
+        $.fn.dataTable.ext.classes.sPageButton = 'btn btn-light';
+        $('#pastatai_table').DataTable({
+            "language": {
+                "sEmptyTable":      "Lentelėje nėra duomenų",
+                "sInfo":            "Rodomi įrašai nuo _START_ iki _END_ iš _TOTAL_ įrašų",
+                "sInfoEmpty":       "Rodomi įrašai nuo 0 iki 0 iš 0",
+                "sInfoFiltered":    "(atrinkta iš _MAX_ įrašų)",
+                "sInfoPostFix":     "",
+                "sInfoThousands":   " ",
+                "sLengthMenu":      "Rodyti _MENU_ įrašus",
+                "sLoadingRecords":  "Įkeliama...",
+                "sProcessing":      "Apdorojama...",
+                "sSearch":          "Ieškoti:",
+                "searchPlaceholder": "Ieškoti",
+                "sThousands":       " ",
+                "sUrl":             "",
+                "sZeroRecords":     "<span style=\"padding: 20px; margin: 0px; font-size: 20px; \">Įrašų nerasta</span>",
+            
+                "oPaginate": {
+                    "sFirst": "Pirmas",
+                    "sPrevious": "Ankstesnis",
+                    "sNext": "Tolimesnis",
+                    "sLast": "Paskutinis"
+                }
+            },
+            "aoColumnDefs": [
+                { "bSortable": false, "aTargets": [ 11 ] }, 
+                { "bSearchable": false, "aTargets": [ 11 ] },
+            ],
+            "order": []
+        });
+    });
 </script>
+    
+
+
     
 @endsection

@@ -1,5 +1,5 @@
 <!-- Ivesti nauja pastata -->
-<button class="btn btn-light" <?php echo $d = (App\Pastatas::count() < 1) ? 'disabled="disabled"' : '' ?> style="left:200px;position:absolute" data-toggle="modal" data-target="#addNewPatalpaModal">Įvesti naują patalpą</button>
+<button class="btn btn-light" <?php echo $d = (App\Pastatas::count() < 1) ? 'disabled="disabled"' : '' ?> style="left:20px;position:absolute" data-toggle="modal" data-target="#addNewPatalpaModal">Įvesti naują patalpą</button>
 <!-- Add New Modal -->
 <div class="modal fade" id="addNewPatalpaModal" role="dialog" aria-labelledby="addNewPatalpaModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">

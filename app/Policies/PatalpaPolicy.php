@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\User;
 use App\Patalpa;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Auth;
 
 class PatalpaPolicy
 {
@@ -18,7 +19,10 @@ class PatalpaPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        if(!$user->permissions->where('permission_id', env('P_ADMIN'))->isEmpty() || !$user->permissions->where('permission_id', env("P_REGULAR"))->isEmpty()){
+            return true;
+        } 
+        return false;
     }
 
     /**
@@ -41,7 +45,7 @@ class PatalpaPolicy
      */
     public function create(User $user)
     {
-        if(!$user->permissions->where('permission_id', 71)->isEmpty()){
+        if(!$user->permissions->where('permission_id',  env('P_ADMIN'))->isEmpty()){
             return true;
         } 
         return false;
@@ -49,7 +53,7 @@ class PatalpaPolicy
 
     public function elements(User $user)
     {
-        if(!$user->permissions->where('permission_id', 71)->isEmpty() || !$user->permissions->where('permission_id', env("P_REGULAR"))->isEmpty()){
+        if(!$user->permissions->where('permission_id', env('P_ADMIN'))->isEmpty() || !$user->permissions->where('permission_id', env("P_REGULAR"))->isEmpty()){
             return true;
         } 
         return false;
@@ -64,8 +68,9 @@ class PatalpaPolicy
      */
     public function update(User $user, Patalpa $patalpa)
     {
-        if(!$user->permissions->where('permission_id',71)->isEmpty() || !$user->permissions->where('permission_id', env("P_REGULAR"))->isEmpty()){
-            return true;
+        if(!$user->permissions->where('permission_id', env('P_ADMIN'))->isEmpty() || !$user->permissions->where('permission_id', env("P_REGULAR"))->isEmpty()){
+            if(in_array($patalpa->pastatai_id, Auth::user()->pastatai->pluck('id')->toArray()) || !$user->permissions->where('permission_id', env('P_ADMIN'))->isEmpty())
+                return true;
         } 
         return false;
     }
@@ -79,7 +84,7 @@ class PatalpaPolicy
      */
     public function delete(User $user, Patalpa $patalpa)
     {
-        if(!$user->permissions->where('permission_id', 71)->isEmpty()){
+        if(!$user->permissions->where('permission_id', env('P_ADMIN'))->isEmpty()){
             return true;
         } 
         return false;

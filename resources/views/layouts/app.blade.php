@@ -14,8 +14,18 @@
     @if ($errors->any())
         <div class="alert alert-danger"><strong>@lang('base.klaida')!</strong> {{ $errors->first() }}</div>
     @endif
-
-
+    <div>
+        @if(session('success'))
+        <div class="alert alert-success text-center" style="display:inline-block">
+            {{ session('success') }}
+        </div>
+        @endif
+        @if(session('danger'))
+            <div class="alert alert-danger text-center" style="display:inline-block">
+                {{ session('danger') }}
+            </div>
+        @endif
+    </div>
     <div class="h-100 row align-items-md-center justify-content-md-center">
         <div class="col-sm-12 col-md-9 col-login">
             <div class="row">
@@ -42,5 +52,6 @@
         </div>
     </div>
 </div>
+
 </body>
 </html>

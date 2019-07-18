@@ -22,17 +22,17 @@ class PastataiController extends Controller
      */
     public function index()
     {
-        $users = User::whereHas('permissions', function ($query) {
+        /*$users = User::whereHas('permissions', function ($query) {
             $query->where('permission_id', '=', env("P_ADMIN"));
-        })->get();
+        })->get();*/
 
         //dd($users);
         //dd(env("P_REGULAR"));
 
-        //$this->authorize('create', \App\Pastatas::class);
+        $this->authorize('viewAny', \App\Pastatas::class);
 
-
-        $pastatai = Pastatas::orderBy('id', 'desc')->paginate(25);
+        
+        $pastatai = Pastatas::orderBy('id', 'desc')->get();
         $kadastrai = Pastatas::pluck('kadastronr', 'kadastronr');
         $kodai = Pastatas::pluck('kodas', 'kodas');
         $pavadinimai = Pastatas::pluck('pavadinimas', 'pavadinimas');
@@ -69,7 +69,7 @@ class PastataiController extends Controller
             'miestas' => 'required',
             'busena' => 'required', 
             'startdate' => 'required|date|before_or_equal:today',
-            'enddate' => 'date|after_or_equal:today|nullable'
+            'enddate' => 'date|after_or_equal:startdate|nullable'
         ]);
 
        
@@ -94,9 +94,14 @@ class PastataiController extends Controller
             $pastatas->darbo_laikas_sek_e = $request->input('sek_e');
             $pastatas->save();
 
-        } catch(\Yajra\Pdo\Oci8\Exceptions\Oci8Exception $ex)
+        }
+        catch(\Yajra\Pdo\Oci8\Exceptions\Oci8Exception $ex)
         {
-            return back()->withError('Pastatas su panašiu pavadinimu , adresu arba kodu jau egzistuoja');
+            return back()->withError('Pastatas su panašiu pavadinimu, kodu arba kadastriniu numeriu jau egzistuoja');
+        }
+        catch(\Illuminate\Database\QueryException $ex)
+        {
+            return back()->withError('Pastatas su panašiu pavadinimu, kodu arba kadastriniu numeriu jau egzistuoja');
         }
 
         return redirect('/pastatai')->with('success', 'Pastatas sėkmingai pridėtas');
@@ -145,7 +150,7 @@ class PastataiController extends Controller
             'miestas' => 'required|max:15',
             'busena' => 'required|max:30', 
             'startdate' => 'required|date|before_or_equal:today',
-            'enddate' => 'date|after_or_equal:today|nullable'
+            'enddate' => 'date|after_or_equal:startdate|nullable'
         ]);
 
         try {
@@ -169,9 +174,14 @@ class PastataiController extends Controller
         $pastatas->darbo_laikas_sek_e = $request->input('sek_e');
         $pastatas->save();
         
-        } catch(\Yajra\Pdo\Oci8\Exceptions\Oci8Exception $ex)
+        } 
+        catch(\Yajra\Pdo\Oci8\Exceptions\Oci8Exception $ex)
         {
-            return back()->withError('Pastatas su panašiu pavadinimu , adresu arba kodu jau egzistuoja');
+            return back()->withError('Pastatas su panašiu pavadinimu, kodu arba kadastriniu numeriu jau egzistuoja');
+        }
+        catch(\Illuminate\Database\QueryException $ex)
+        {
+            return back()->withError('Pastatas su panašiu pavadinimu, kodu arba kadastriniu numeriu jau egzistuoja');
         }
 
         return redirect('/pastatai')->with('success', 'Pastatas sėkmingai redaguotas');
@@ -233,16 +243,17 @@ class PastataiController extends Controller
                     $query->Where('busena', 'like', '%'.$busena.'%');
                 }  
             })
-            ->paginate(20);
+            ->orderBy('id', 'desc')->get();
             
-        $pastatai->appends(['kadastronr' => $kadastronr, 'kodas' => $kodas,
-                            'pavadinimas' => $pavadinimas, 'adresas' => $adresas,
-                            'aukstai' => $aukstai, 'busena' => $busena]);
-
+        //$pastatai->appends(['kadastronr' => $kadastronr, 'kodas' => $kodas,
+        //                    'pavadinimas' => $pavadinimas, 'adresas' => $adresas,
+        //                    'aukstai' => $aukstai, 'busena' => $busena]);
+        
         $kadastrai = Pastatas::pluck('kadastronr', 'kadastronr');
         $kodai = Pastatas::pluck('kodas', 'kodas');
         $pavadinimai = Pastatas::pluck('pavadinimas', 'pavadinimas');
         $adresai = Pastatas::pluck('adresas', 'adresas');
+
 
         return view('pages.pastatai', ['pastatai' => $pastatai], compact('kadastrai', 'kodai', 'pavadinimai', 'adresai'));
     }

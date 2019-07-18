@@ -132,7 +132,7 @@ return [
         'kodas' => [ 'required' => 'Neįvestas kodas.', 'max' => 'Kodas turi būti ne daugiau 10 simbolių.'],
         'pavadinimas' => [ 'required' => 'Neįvestas pastato pavadinimas.', 'max' => 'Pavadinimas turi būti ne daugiau 150 simbolių.'],
         'adresas' => [ 'required' => 'Neįvestas adresas.', 'max' => 'Adresas turi būti ne daugiau 50 simbolių.'],
-        'aukstai' => [ 'required' => 'Neįvestas pastato aukštų kiekis.', ],
+        'aukstai' => [ 'required' => 'Neįvestas pastato aukštų skaičius.', ],
         'padaliniai' => [ 'required' => 'Neįvesti padaliniai.', 'max' => 'Padaliniai turi būti ne daugiau 500 simbolių.'],
         'miestas' => [ 'required' => 'Nepasirinktas miestas.', ],
         'busena' => [ 'required' => 'Nepasirinkta būsena.', ],

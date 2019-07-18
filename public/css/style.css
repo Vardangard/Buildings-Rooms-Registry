@@ -44,14 +44,14 @@ thead {
 }
 .card {
     margin-top: 0px;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     padding-bottom: 0px;
     border-radius: 5px !important;
     border: 1px solid white !important;
     position:relative;
 }
 .card-heading {
-    padding-top: 20px;
+    padding-top: 15px;
     padding-bottom: 20px;
     
 }
@@ -98,14 +98,12 @@ thead {
 }
 table {
     font-size: 12px;
-    margin-bottom: 0px !important;
+    margin-bottom: 20px !important;
     padding-bottom: 0px !important;
-    margin-top: 0px;
-    border: none;
+    margin-top: 50px !important;
+    border: none !important;
     table-layout: auto !important;
     width: 100% !important;
-    text-rendering: optimizeLegibility !important;
-    -webkit-font-smoothing:subpixel-antialiased !important;
 }
 td, th {
     vertical-align: middle !important;
@@ -140,11 +138,8 @@ tfoot {
 .form-control {
     margin-bottom: 0px !important;
     border-radius: 0px !important;
-    
 }
-::placeholder {
 
-}
 .select2-container--default .select2-selection--single {
     border-radius: 0px !important;
     color: #495057 !important;
@@ -209,3 +204,78 @@ tfoot {
     position: absolute;
     /*border: 1px solid blue;*/
 }
+#pastatai_table, #patalpos_table, #pertvaros_table {
+    border: none;
+}
+.dataTables_wrapper .dataTables_filter input {
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 0;
+}
+select {
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 0;
+}
+
+element.style {
+    width: 0px !important;
+}
+table.dataTable tbody th, table.dataTable tbody td {
+    padding: 8px 10px;
+}
+table.dataTable, table.dataTable th, table.dataTable td {
+    box-sizing: content-box;
+}
+.table-bordered, .table-bordered td, .table-bordered th {
+    border: 1px solid #dee2e6;
+}
+.table td, .table th {
+    padding: .75rem;
+    vertical-align: top;
+    border-top: 1px solid #dee2e6;
+}
+td {
+    margin: 0px !important;
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+}
+td, th {
+    vertical-align: middle !important;
+    word-wrap: wrap !important;
+}
+*, ::after, ::before {
+    box-sizing: border-box;
+}
+td {
+    display: table-cell;
+    vertical-align: inherit;
+}
+table.dataTable {
+    border-collapse: collapse !important;
+}
+table.dataTable, table.dataTable th, table.dataTable td {
+    box-sizing: border-box !important;
+}
+.dataTables_wrapper .dataTables_filter {
+    padding: 0px;
+}
+.dataTables_wrapper .dataTables_length {
+
+    margin-bottom: 10px;
+}
+.dataTables_wrapper .dataTables_filter input {
+    width: 400px !important;
+}
+
+

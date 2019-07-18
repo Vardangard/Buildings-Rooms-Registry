@@ -17,6 +17,11 @@
         <li class="nav-item {{ Request::is('patalpos') ? 'active' : null }}">
             <a class="nav-link" href="/patalpos">Patalpų registras<span class="sr-only">(current)</span></a>
         </li>
+        @can('view', App\User::class)
+            <li class="nav-item {{ Request::is('vartotojai') ? 'active' : null }}">
+                <a class="nav-link" href="/vartotojai">Vartotojai<span class="sr-only">(current)</span></a>
+            </li>
+        @endcan
         </ul>
         <!-- Right Side Of Navbar -->
         <ul class="navbar-nav ml-auto">

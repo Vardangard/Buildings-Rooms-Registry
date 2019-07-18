@@ -11,17 +11,23 @@
 |
 */
 
-Route::get('/', 'PagesController@index');
+Route::get('/', 'PagesController@index');//->middleware('granted');
 Route::resource('/pastatai', 'PastataiController');
 Route::resource('/patalpos', 'PatalposController');
 Route::resource('/pertvaros', 'PertvarosController');
-Route::get('/paieska', 'PastataiController@search');
+Route::resource('/vartotojai', 'AssignController');
+Route::post('/priskirti/{id}', 'AssignController@assign');
+Route::delete('/vartotojai/{idp}/{idu}', 'AssignController@detach');
 Route::delete('delete-all', 'PastataiController@deleteAll');
 Route::delete('delete-all-patalpas', 'PatalposController@deleteAll');
 Route::delete('delete-all-pertvaras', 'PertvarosController@deleteAll');
 Route::get('/pertvaros-paieska', 'PertvarosController@search');
 Route::get('/patalpos-paieska', 'PatalposController@search');
 
+Route::get('/paieska', 'PastataiController@search');
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
+Route::get('unauth', '\App\Http\Controllers\Auth\LoginController@unauth');
