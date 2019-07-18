@@ -7,7 +7,6 @@
     <li class="breadcrumb-item active">Pastatų registras</li>
 </ol>
 @include('inc.messages')
-
 <div class="card">
     <div class="card-heading bg-dark">
         <!-- HEADING -->
@@ -48,6 +47,7 @@
                         <th>Pabaiga</th>
                         <th>Būsena</th>
                         <th>Miestas</th>
+                        <th>Paskutinį kartą redaguotas</th>
                         <th>Darbo laikas</th>
                         @can('elements', \App\Pastatas::class)
                             <th>Veiksmas</th>
@@ -71,7 +71,8 @@
                                 <td>{{ $date = $pastatas->enddate ? \Carbon\Carbon::parse($pastatas->enddate)->format('Y-m-d') : '-' }}</td>
                                 <td>{{ $pastatas->busena }}</td> 
                                 <td>{{ $pastatas->miestas }}</td>
-                                <td style="width: 250px;">
+                                <td style="width: 130px;">{{ $pastatas->updated_at }}<br/>{{ !Auth::user()->permissions->where('permission_id', env("P_REGULAR"))->isEmpty() ? Auth::user()->name : "Admin" }}</td>
+                                <td style="width: 150px;">
                                     Darbo diena: {{ $pastatas->darbo_laikas_p_s }} - {{ $pastatas->darbo_laikas_p_e }}<br/>
                                     Šeštadienis: {{ $pastatas->darbo_laikas_ses_s }} - {{ $pastatas->darbo_laikas_ses_e }}<br/>
                                     Sekmadienis: {{ $pastatas->darbo_laikas_sek_s }} - {{ $pastatas->darbo_laikas_sek_e }}
@@ -105,6 +106,7 @@
         </div>
     </div>
 </div>
+
 
 
 <!-- SCRIPTS -->

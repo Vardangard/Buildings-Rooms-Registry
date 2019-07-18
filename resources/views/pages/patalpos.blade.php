@@ -7,7 +7,7 @@
     <li class="breadcrumb-item active">Patalpų registras</li>
 </ol>
 @include('inc.messages1')
-
+<div class="container">
 <div class="card">
     <div class="card-heading bg-dark">
         <!-- HEADING -->
@@ -23,6 +23,7 @@
          <!-- END HEADING -->
     </div>
 </div>
+
 <div class="card">
     <!-- Card Block -->
     <div class="card-block">
@@ -60,7 +61,7 @@
                                         {{ $patalpa->pertvaros }}
                                     @endif
                                 </td>
-                                <td>{{ $patalpa->updated_at }}</td> 
+                                <td style="width: 200px;">{{ $patalpa->updated_at }}<br/>{{ !Auth::user()->permissions->where('permission_id', env("P_REGULAR"))->isEmpty() ? Auth::user()->name : "Admin" }}</td> 
     
                                 @can('elements', \App\Patalpa::class)
                                     <!-- Form Delete -->
@@ -88,6 +89,7 @@
             @endif
         </div>
     </div>
+</div>
 </div>
 
 

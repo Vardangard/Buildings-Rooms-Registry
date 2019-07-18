@@ -74,13 +74,13 @@
                                 <td style="width: 160px;">{{ $pertvara->pavadinimas }}</td>
                                 <td>{{ $pertvara->nr }}</td>
                                 <td>{{ $pertvara->talpa }}</td>
-                                <td style="width: 160px;">{{ $pertvara->atsakingas ?? 'Deividas Januškevičius' }}</td>
+                                <td style="width: 160px;">{{ $pertvara->atsakingas ?? 'Darth Vader' }}</td>
                                 <td>{{ $pertvara->telefonas ?? '-' }}</td>
                                 <td>{{ $pertvara->kvadratura }} m2</td>
                                 <td style="width: 150px;">{{ $pertvara->busena }}</td>
                                 <td style="width: 100px;">{{ \Carbon\Carbon::parse($pertvara->startdate)->format('Y-m-d') }}</td>
                                 <td style="width: 100px;">{{ $date = $pertvara->enddate ? \Carbon\Carbon::parse($pertvara->enddate)->format('Y-m-d') : '-' }}</td>
-                                <td style="width: 170px;">{{ $pertvara->updated_at }}</td>
+                                <td style="width: 130px;">{{ $pertvara->updated_at }}<br/>{{ !Auth::user()->permissions->where('permission_id', env("P_REGULAR"))->isEmpty() ? Auth::user()->name : "Admin" }}</td>
 
                                 @can('elements', \App\Pertvara::class)
                                     <!-- Form Delete -->
