@@ -7,7 +7,7 @@
     <li class="breadcrumb-item active">Patalpų registras</li>
 </ol>
 @include('inc.messages1')
-<div class="container">
+
 <div class="card">
     <div class="card-heading bg-dark">
         <!-- HEADING -->
@@ -29,7 +29,7 @@
     <div class="card-block">
         <div class="table-responsive">
             @if(count($patalpos) > 0)
-            <table class="table table-bordered table-hover auto" id="patalpos_table">
+            <table class="table table-bordered table-striped table-hover auto" id="patalpos_table">
                 <thead class="thead-dark">
                     <tr>
                         <!--@can('elements', \App\Patalpa::class)
@@ -39,6 +39,7 @@
                         <th>Aukštas</th>
                         <th>Patalpos Nr.</th>
                         <th>Pertvaros</th>
+                        <th>Sistemoje įrašytos pertvaros</th>
                         <th>Paskutinį kartą redaguotas</th>
                         @can('elements', \App\Patalpa::class)
                             <th>Veiksmas</th>
@@ -52,16 +53,26 @@
                                 <!--@can('elements', \App\Patalpa::class)
                                     <td style="width: 12px;" class="text-center"><input type="checkbox" name="ids[]" class="selectbox" value="{{ $patalpa->id }}">{{$patalpa->id}}</td>
                                 @endcan-->
-                                <td>{{ $patalpa->pastatas->pavadinimas }}</td>
-                                <td>{{ $patalpa->aukstas }}</td>
-                                <td>{{ $patalpa->nr }}</td>
-                                <td>@if($patalpa->pertvaros < 1)
+                                <td>{{ $patalpa->pastatas->pavadinimas ?? '-'}}</td>
+                                <td>{{ $patalpa->aukstas ?? '-'}}</td>
+                                <td>{{ $patalpa->nr ?? '-'}}</td>
+                                <td>
+                                    @if($patalpa->pertvaros < 1)
                                         Nėra įrašytų pertvarų
                                     @elseif($patalpa->pertvaros > 0)
-                                        {{ $patalpa->pertvaros }}
+                                        {{ $patalpa->pertvaros }} 
+                                    @endif 
+                                </td>
+                                <td> 
+                                    @if(\App\Pertvara::where('patalpos_id', '=', $patalpa->id)->count() < 1)
+                                        Nėra įrašytų pertvarų
+                                    @elseif($patalpa->pertvaros < \App\Pertvara::where('patalpos_id', '=', $patalpa->id)->count()) 
+                                        {{ \App\Pertvara::where('patalpos_id', '=', $patalpa->id)->count() }} - Įrašyta daugiau pertvarų negu yra patalpoje
+                                    @else
+                                        {{ \App\Pertvara::where('patalpos_id', '=', $patalpa->id)->count() }}
                                     @endif
                                 </td>
-                                <td style="width: 200px;">{{ $patalpa->updated_at }}<br/>{{ !Auth::user()->permissions->where('permission_id', env("P_REGULAR"))->isEmpty() ? Auth::user()->name : "Admin" }}</td> 
+                                <td style="width: 200px;">{{ $patalpa->updated_at ?? '0000-00-00 00:00:00'}}<br/>{{ !Auth::user()->permissions->where('permission_id', env("P_REGULAR"))->isEmpty() ? "Redagavo: ".Auth::user()->name : "Admin" }}</td> 
     
                                 @can('elements', \App\Patalpa::class)
                                     <!-- Form Delete -->
@@ -72,7 +83,6 @@
                                         @can('update', $patalpa)
                                             <a class="btn" id="redaguoti" href="/patalpos/{{ $patalpa->id }}/edit"><i class="fa fa-edit"></i></a>
                                         @endcan
-                                        
                                         @can('delete', $patalpa)
                                             <button class="btn" onclick="return confirm('Ar tikrai norite ištrinti šią patalpą?')" id="trinti" formaction="{{ action('PatalposController@destroy', $patalpa->id) }}" type="submit"><i class="fa fa-trash"></i></button>
                                         @endcan   
@@ -90,7 +100,7 @@
         </div>
     </div>
 </div>
-</div>
+
 
 
 <!-- SCRIPTS -->

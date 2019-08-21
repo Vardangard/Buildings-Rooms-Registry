@@ -30,7 +30,7 @@
     <div class="card-block">
         <div class="table-responsive">
             @if(count($pastatai) >= 1)
-            <table class="table table-bordered table-hover auto" id="pastatai_table">
+            <table class="table table-bordered table-striped table-hover auto" id="pastatai_table">
                 
                 <thead class="thead-dark">
                     <tr>
@@ -55,29 +55,53 @@
                     </tr>
                 </thead> 
                 <tbody>
-                    
+                
                         @foreach($pastatai as $pastatas)
                             <tr>
                                 <!--@can('elements', \App\Pastatas::class)
                                     <td style="width: 12px;" class="text-center"><input type="checkbox" name="ids[]" class="selectbox" value="{{ $pastatas->id }}"></td>
                                 @endcan-->
-                                <td>{{ $pastatas->kodas }}</td>
-                                <td style="width: 300px;">{{ $pastatas->pavadinimas }}</td>
-                                <td>{{ $pastatas->adresas }}</td>
-                                <td>{{ $pastatas->aukstai }}</td>
-                                <td>{{ $pastatas->kadastronr }}</td>
-                                <td style="width: 300px;">{{ $pastatas->padaliniai }}</td>
-                                <td>{{ \Carbon\Carbon::parse($pastatas->startdate)->format('Y-m-d') }}</td>
+                                <td>{{ $pastatas->kodas ?? '-'}}</td>
+                                <td style="width: 300px;">{{ $pastatas->pavadinimas ?? '-'}}</td>
+                                <td>{{ $pastatas->adresas ?? '-' }}</td>
+                                <td>{{ $pastatas->aukstai ?? '-'}}</td>
+                                <td>{{ $pastatas->kadastronr ?? '-'}}</td>
+                                <td style="width: 300px;">{{ $pastatas->padaliniai ?? '-' }}</td>
+                                <td>{{ $date = $pastatas->startdate ? \Carbon\Carbon::parse($pastatas->startdate)->format('Y-m-d') : '-' }}</td>
                                 <td>{{ $date = $pastatas->enddate ? \Carbon\Carbon::parse($pastatas->enddate)->format('Y-m-d') : '-' }}</td>
-                                <td>{{ $pastatas->busena }}</td> 
-                                <td>{{ $pastatas->miestas }}</td>
-                                <td style="width: 130px;">{{ $pastatas->updated_at }}<br/>{{ !Auth::user()->permissions->where('permission_id', env("P_REGULAR"))->isEmpty() ? Auth::user()->name : "Admin" }}</td>
-                                <td style="width: 150px;">
-                                    Darbo diena: {{ $pastatas->darbo_laikas_p_s }} - {{ $pastatas->darbo_laikas_p_e }}<br/>
-                                    Šeštadienis: {{ $pastatas->darbo_laikas_ses_s }} - {{ $pastatas->darbo_laikas_ses_e }}<br/>
-                                    Sekmadienis: {{ $pastatas->darbo_laikas_sek_s }} - {{ $pastatas->darbo_laikas_sek_e }}
+                                <td style="width: 130px;">
+                                    @switch($pastatas->busena)
+                                        @case('PD0101')
+                                            Aktyvus (-i)
+                                            @break
+                                        @case('PD0102')
+                                            Remontuojamas (-a)
+                                            @break
+                                        @case('PD0103')
+                                            Kraustymas
+                                            @break
+                                        @case('PD0104')
+                                            Panaikintas (-a)
+                                            @break
+                                        @default
+                                            -
+                                    @endswitch
+                                </td> 
+                                <td>{{ $pastatas->city ?? '-'}}</td>
+                                <td style="width: 130px;">{{ $pastatas->updated_at ?? "0000-00-00 00:00:00" }}<br/>{{ !Auth::user()->permissions->where('permission_id', env("P_REGULAR"))->isEmpty() ? Auth::user()->name : "Admin" }}</td>
+                                <td style="width: 170px;">
+                                    @if(in_array($pastatas->id, $laikai->pluck('pastato_id')->toArray()))
+                                        @foreach($laikai->where('pastato_id', $pastatas->id) as $laikas)
+                                                Darbo diena: {{ $laikas->darbo_laikas_p_s ?? '-' }} - {{ $laikas->darbo_laikas_p_e ?? '-' }}<br/>
+                                                Šeštadienis: {{ $laikas->darbo_laikas_ses_s ?? '-' }} - {{ $laikas->darbo_laikas_ses_e ?? '-' }}<br/>
+                                                Sekmadienis: {{ $laikas->darbo_laikas_sek_s ?? '-' }} - {{ $laikas->darbo_laikas_sek_e ?? '-' }}   
+                                        @endforeach
+                                    @else
+                                        Darbo diena: - - -<br/>
+                                        Šeštadienis: - - - <br/>
+                                        Sekmadienis: - - -   
+                                    @endif
                                 </td>
-
                                 @can('elements', \App\Pastatas::class)
                                     <!-- Form Delete -->
                                     <form method="POST">
@@ -88,7 +112,7 @@
                                                 <a class="btn" id="redaguoti" href="/pastatai/{{ $pastatas->id }}/edit"><i class="fa fa-edit"></i></a>
                                             @endcan
                                             @can('delete', $pastatas)
-                                                <button class="btn" onclick="return confirm('Ar tikrai norite ištrinti šį pastatą?')"  id="trinti" formaction="{{ action('PastataiController@destroy', $pastatas->id) }}" type="submit"><i class="fa fa-trash"></i></button>
+                                                <button class="btn" onclick="return confirm('Ar tikrai norite ištrinti šį pastatą? - {{ $pastatas->pavadinimas }}')"  id="trinti" formaction="{{ action('PastataiController@destroy', $pastatas->id) }}" type="submit"><i class="fa fa-trash"></i></button>
                                             @endcan
                                         </td>
                                     </form>

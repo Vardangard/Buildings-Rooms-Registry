@@ -6,8 +6,8 @@
     <li class="breadcrumb-item"><a href="/">Pastatų ir patalpų registras</a></li>
     <li class="breadcrumb-item active">Vartotojai</li>
 </ol>
-@include('inc.messages')
-
+<div style="float:left">@include('inc.messages')</div>
+<div class="container">
 <div class="card">
     <div class="card-heading bg-dark">
         <!-- HEADING -->
@@ -22,12 +22,12 @@
 <div class="card">   
     <!-- Card Block -->
     <div class="card-block">
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover auto" style="margin-top: 0px !important;">
+        <div class="table-responsive" style="overflow:inherit;">
+            <table class="table table-bordered table-striped table-hover auto" style="margin-top: 0px !important;">
                 @if(count($users) >= 1)
                 <thead class="thead-dark">
                     <tr>
-                        <th><input type="checkbox" class="selectall"></th>
+                        <!--<th><input type="checkbox" class="selectall"></th>-->
                         <th>Vartotojas</th>
                         <th>Priskirti pastatai</th>
                         <th>Veiksmas</th>
@@ -36,7 +36,7 @@
                 <tbody>
                         @foreach($users as $user)
                             <tr>
-                                <td style="width: 12px;"><input type="checkbox" name="ids[]" class="selectbox" value="{{ $user->id }}"></td>
+                                <!--<td style="width: 12px;"><input type="checkbox" name="ids[]" class="selectbox" value="{{ $user->id }}"></td>-->
                                 <td>{{ $user->name }}</td>
                                 <td>
                                     <!-- Form Delete -->
@@ -44,9 +44,25 @@
                                             @csrf
                                             @method('DELETE')    
                 
-                                        @foreach($user->pastatai as $pastatas) 
+                                        <!--@foreach($user->pastatai->sortBy('pavadinimas') as $pastatas) 
                                             {{ $pastatas->pavadinimas }} <button class="btn" id="trinti" formaction="{{ action('AssignController@detach', [$pastatas->id, $user->id]) }}" type="submit"><i class="fa fa-times-circle"></i></button><br/> 
-                                        @endforeach
+                                            @endforeach-->
+                                        
+                                            @if($user->pastatai->count() > 0)
+                                            <div class="dropdown">
+                                                <button class="btn btn-dark dropdown-toggle btn-block" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    Peržiūrėti
+                                                </button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                    @foreach($user->pastatai->sortBy('pavadinimas') as $pastatas) 
+                                                        <a class="dropdown-item" href="#">{{ $pastatas->pavadinimas }} <button class="btn" id="trinti" formaction="{{ action('AssignController@detach', [$pastatas->id, $user->id]) }}" type="submit"><i class="fa fa-times-circle"></i></button><br/></a>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                            @else
+                                                Vartotojas neturi priskirtų pastatų
+                                            @endif
+                                        
                                     </form>     
                                 </td>
                                 <td>
@@ -65,7 +81,7 @@
                                                 }}<br/>
                                                 </div>
                                                 <div class="text-left" style="padding-left: 15px;">
-                                                    {{ Form::submit('Pridėti', ['class' => 'btn btn-secondary']) }}
+                                                    {{ Form::submit('Pridėti', ['class' => 'btn btn-dark']) }}
                                                 </div>   
                                             </div>                                             
                                         </div>       
@@ -86,8 +102,9 @@
         </div>
     </div>
 </div>
+</div>
 
-
+<!-- CHECKBOX SELECT
 <script type="text/javascript">
     $('.selectall').click( function () {
         $('.selectbox').prop('checked', $(this).prop('checked'));
@@ -108,11 +125,18 @@
             $('.selectall2').prop('checked', false);
         }
     })
-</script>
+</script>-->
+<script type="text/javascript">
 
+</script>
 <script type="text/javascript">
     $(".pastatass").select2();
+    $("#assigned").select2({
+        minimumResultsForSearch: 20,
+    });
     allowClear: true;
 </script>
+
+
     
 @endsection

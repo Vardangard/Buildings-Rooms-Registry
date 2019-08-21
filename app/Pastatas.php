@@ -6,11 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Pastatas extends Model
 {
-    protected $connection = 'tvarkis';
+    protected $connection = 'luadm';
     
-    protected $table = 'pastatas';
+    protected $table = 'pp_pastatai'; //protected $table = 'pastatas'; !INCASE OF ABORT! \\
 
     protected $primaryKey = 'id';
+
+    public $timestamps = true;
+
+    protected $fillable = ['updated_at', 'created_at']; 
 
     public function patalpa()
     {
@@ -19,7 +23,13 @@ class Pastatas extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'tvarkis.assigns');
+        return $this->belongsToMany(User::class, 'assigns'); // luadm.assigns
     }
+
+    //ALTERNATIVE TIME TABLE
+    //public function laikas()
+    //{
+    //    return $this->hasOne('App\Laikas');
+    //}
 
 }

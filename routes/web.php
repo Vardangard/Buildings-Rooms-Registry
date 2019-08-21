@@ -11,6 +11,7 @@
 |
 */
 
+
 Route::get('/', 'PagesController@index');//->middleware('granted');
 Route::resource('/pastatai', 'PastataiController');
 Route::resource('/patalpos', 'PatalposController');
@@ -28,6 +29,6 @@ Route::get('/paieska', 'PastataiController@search');
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/menu', 'HomeController@index')->name('menu');
 Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
 Route::get('unauth', '\App\Http\Controllers\Auth\LoginController@unauth');

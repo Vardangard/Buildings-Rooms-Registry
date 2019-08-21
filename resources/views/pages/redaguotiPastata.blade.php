@@ -50,7 +50,7 @@
                         {{ Form::label('aukstai', 'Aukštai') }}<br/>
                     </div>
                     <div class="col-md-6 text-left">
-                        {{ Form::number('aukstai', $pastatas->aukstai, ['min' => 1, 'max' => 16, 'class' => 'form-control', 'placeholder' => 'Aukštai', 'style' => 'margin-bottom: 2px', 'style' => 'width:50%;']) }}<br/>
+                        {{ Form::number('aukstai', $pastatas->aukstai, ['min' => 0, 'max' => 16, 'class' => 'form-control', 'placeholder' => 'Aukštai', 'style' => 'margin-bottom: 2px', 'style' => 'width:50%;']) }}<br/>
                     </div> 
                 </div>
                 <div class="row">
@@ -66,7 +66,7 @@
                         {{ Form::label('startdate', 'Pradžia') }}<br/>
                     </div>
                     <div class="col-md-6 text-left">
-                        {{ Form::date('startdate',  \Carbon\Carbon::parse($pastatas->startdate)->format('Y-m-d'), ['class' => 'form-control', 'style' => 'margin-bottom: 2px']) }}<br/>
+                        {{ Form::date('startdate',  $pastatas->startdate ? \Carbon\Carbon::parse($pastatas->startdate)->format('Y-m-d') : "", ['class' => 'form-control', 'style' => 'margin-bottom: 2px']) }}<br/>
                     </div> 
                 </div>
                 <div class="row">
@@ -74,7 +74,7 @@
                         {{ Form::label('enddate', 'Pabaiga') }}<br/>
                     </div>
                     <div class="col-md-6 text-left">
-                        {{ Form::date('enddate', $pastatas->enddate ? \Carbon\Carbon::parse($pastatas->endate)->format('Y-m-d') : "", ['class' => 'form-control', 'style' => 'margin-bottom: 2px']) }}<br/>
+                        {{ Form::date('enddate', $pastatas->enddate ? \Carbon\Carbon::parse($pastatas->enddate)->format('Y-m-d') : "", ['class' => 'form-control', 'style' => 'margin-bottom: 2px']) }}<br/>
                     </div> 
                 </div>
                 <div class="row">
@@ -82,7 +82,7 @@
                         {{ Form::label('miestas', 'Miestas') }}<br/>
                     </div>
                     <div class="col-md-6 text-left">
-                        {{Form::select('miestas', ['Kaunas' => 'Kaunas', 'Vilnius' => 'Vilnius', 'Klaipėda' => 'Klaipėda'], $pastatas->miestas,
+                        {{Form::select('miestas', ['KNS' => 'Kaunas', 'VLN' => 'Vilnius', 'KLP' => 'Klaipėda'], $pastatas->city,
                             [
                                 'class' => 'form-control',
                                 'placeholder' => 'Pasirinkti Miestą',
@@ -97,7 +97,7 @@
                         {{ Form::label('busena', 'Būsena') }}<br/>
                     </div>
                     <div class="col-md-6 text-left">
-                        {{Form::select('busena',['Aktyvus (-i)' => 'Aktyvus (-i)', 'Remontuojamas (-a)' => 'Remontuojamas (-a)', 'Kraustymas' => 'Kraustymas', 'Panaikintas (-a)' => 'Panaikintas (-a)'], $pastatas->busena,
+                        {{Form::select('busena',['PD0101' => 'Aktyvus (-i)', 'PD0102' => 'Remontuojamas (-a)', 'PD0103' => 'Kraustymas', 'PD0104' => 'Panaikintas (-a)'], $pastatas->busena,
                             [
                                 'class' => 'form-control',
                                 'placeholder' => 'Pasirinkti Būsena',
@@ -107,39 +107,77 @@
                         }}<br/>
                     </div> 
                 </div>
-                <div class="row">
-                    <div class="col-md-6 text-right">
-                        {{ Form::label('Darbo laikas') }}<br/>
-                    </div>
-                    <div class="col-md-3 text-left">
-                        {{ Form::time('p_s', \Carbon\Carbon::createFromFormat('H:i', $pastatas->darbo_laikas_p_s ?? '08:00', 'Europe/Vilnius'), ['class' => 'form-control']) }}
-                    </div>
-                    <div class="col-md-3 text-left">
-                        {{ Form::time('p_e', \Carbon\Carbon::createFromFormat('H:i', $pastatas->darbo_laikas_p_e  ?? '17:00', 'Europe/Vilnius'), ['class' => 'form-control', 'style' => 'margin-bottom: 2px']) }}<br/>
-                    </div> 
-                </div>
-                <div class="row">
-                    <div class="col-md-6 text-right">
-                        {{ Form::label('Darbo laikas Š') }}<br/>
-                    </div>
-                    <div class="col-md-3 text-left">
-                        {{ Form::time('ses_s', \Carbon\Carbon::createFromFormat('H:i', $pastatas->darbo_laikas_ses_s  ?? '08:00', 'Europe/Vilnius'), ['class' => 'form-control']) }}
-                    </div>
-                    <div class="col-md-3 text-left">
-                        {{ Form::time('ses_e', \Carbon\Carbon::createFromFormat('H:i', $pastatas->darbo_laikas_ses_e ?? '17:00', 'Europe/Vilnius'), ['class' => 'form-control', 'style' => 'margin-bottom: 2px']) }}<br/>
-                    </div> 
-                </div>
-                <div class="row">
-                    <div class="col-md-6 text-right">
-                        {{ Form::label('Darbo laikas S') }}<br/>
+                @if($laikas === null)
+                    <div class="row">
+                        <div class="col-md-6 text-right">
+                            {{ Form::label('Darbo laikas') }}<br/>
                         </div>
-                    <div class="col-md-3 text-left">
-                        {{ Form::time('sek_s', \Carbon\Carbon::createFromFormat('H:i', $pastatas->darbo_laikas_sek_s  ?? '08:00', 'Europe/Vilnius'), ['class' => 'form-control']) }}
+                        <div class="col-md-3 text-left">
+                            {{ Form::time('p_s', null, ['class' => 'form-control']) }}
+                        </div>
+                        <div class="col-md-3 text-left">
+                            {{ Form::time('p_e', null, ['class' => 'form-control', 'style' => 'margin-bottom: 2px']) }}<br/>
+                        </div> 
                     </div>
-                    <div class="col-md-3 text-left">
-                        {{ Form::time('sek_e', \Carbon\Carbon::createFromFormat('H:i', $pastatas->darbo_laikas_sek_e ?? '17:00', 'Europe/Vilnius'), ['class' => 'form-control', 'style' => 'margin-bottom: 2px']) }}<br/>
-                    </div> 
-                </div>
+                    <div class="row">
+                        <div class="col-md-6 text-right">
+                            {{ Form::label('Darbo laikas Š') }}<br/>
+                        </div>
+                        <div class="col-md-3 text-left">
+                            {{ Form::time('ses_s', null, ['class' => 'form-control']) }}
+                        </div>
+                        <div class="col-md-3 text-left">
+                            {{ Form::time('ses_e', null, ['class' => 'form-control', 'style' => 'margin-bottom: 2px']) }}<br/>
+                        </div> 
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 text-right">
+                            {{ Form::label('Darbo laikas S') }}<br/>
+                        </div>
+                        <div class="col-md-3 text-left">
+                            {{ Form::time('sek_s', null, ['class' => 'form-control']) }}
+                        </div>
+                        <div class="col-md-3 text-left">
+                            {{ Form::time('sek_e', null, ['class' => 'form-control', 'style' => 'margin-bottom: 2px']) }}<br/>
+                        </div> 
+                        <!--\Carbon\Carbon::createFromFormat('H:i', $laikas->darbo_laikas_sek_e ?? '17:00', 'Europe/Vilnius')-->
+                    </div>
+                @else
+                    <div class="row">
+                        <div class="col-md-6 text-right">
+                            {{ Form::label('Darbo laikas') }}<br/>
+                        </div>
+                        <div class="col-md-3 text-left">
+                            {{ Form::time('p_s', $ex = $laikas->darbo_laikas_p_s ? \Carbon\Carbon::createFromFormat('H:i', $laikas->darbo_laikas_p_s, 'Europe/Vilnius') : null, ['class' => 'form-control']) }}
+                        </div>
+                        <div class="col-md-3 text-left">
+                            {{ Form::time('p_e', $ex = $laikas->darbo_laikas_p_e ? \Carbon\Carbon::createFromFormat('H:i', $laikas->darbo_laikas_p_e, 'Europe/Vilnius') : null, ['class' => 'form-control', 'style' => 'margin-bottom: 2px']) }}<br/>
+                        </div> 
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 text-right">
+                            {{ Form::label('Darbo laikas Š') }}<br/>
+                        </div>
+                        <div class="col-md-3 text-left">
+                            {{ Form::time('ses_s', $ex = $laikas->darbo_laikas_ses_s ? \Carbon\Carbon::createFromFormat('H:i', $laikas->darbo_laikas_ses_s, 'Europe/Vilnius') : null, ['class' => 'form-control']) }}
+                        </div>
+                        <div class="col-md-3 text-left">
+                            {{ Form::time('ses_e', $ex = $laikas->darbo_laikas_ses_e ? \Carbon\Carbon::createFromFormat('H:i', $laikas->darbo_laikas_ses_e, 'Europe/Vilnius') : null, ['class' => 'form-control', 'style' => 'margin-bottom: 2px']) }}<br/>
+                        </div> 
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 text-right">
+                            {{ Form::label('Darbo laikas S') }}<br/>
+                        </div>
+                        <div class="col-md-3 text-left">
+                            {{ Form::time('sek_s', $ex = $laikas->darbo_laikas_sek_s ? \Carbon\Carbon::createFromFormat('H:i', $laikas->darbo_laikas_sek_s, 'Europe/Vilnius') : null, ['class' => 'form-control']) }}
+                        </div>
+                        <div class="col-md-3 text-left">
+                            {{ Form::time('sek_e', $ex = $laikas->darbo_laikas_sek_e ? \Carbon\Carbon::createFromFormat('H:i', $laikas->darbo_laikas_sek_e, 'Europe/Vilnius') : null, ['class' => 'form-control', 'style' => 'margin-bottom: 2px']) }}<br/>
+                        </div> 
+                        <!--\Carbon\Carbon::createFromFormat('H:i', $laikas->darbo_laikas_sek_e ?? '17:00', 'Europe/Vilnius')-->
+                    </div>
+                @endif
             </div>
         </div>
     </div>

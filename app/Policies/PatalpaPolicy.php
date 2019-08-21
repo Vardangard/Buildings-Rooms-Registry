@@ -45,7 +45,7 @@ class PatalpaPolicy
      */
     public function create(User $user)
     {
-        if(!$user->permissions->where('permission_id',  env('P_ADMIN'))->isEmpty()){
+        if(!$user->permissions->where('permission_id', env('P_ADMIN'))->isEmpty()){
             return true;
         } 
         return false;
@@ -70,6 +70,7 @@ class PatalpaPolicy
     {
         if(!$user->permissions->where('permission_id', env('P_ADMIN'))->isEmpty() || !$user->permissions->where('permission_id', env("P_REGULAR"))->isEmpty()){
             if(in_array($patalpa->pastatai_id, Auth::user()->pastatai->pluck('id')->toArray()) || !$user->permissions->where('permission_id', env('P_ADMIN'))->isEmpty())
+            //if(!$user->permissions->where('permission_id', env('P_ADMIN'))->isEmpty())
                 return true;
         } 
         return false;

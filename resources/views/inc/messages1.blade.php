@@ -25,6 +25,11 @@
             </div>
         @endif
     
+        @if(session('warning'))
+            <div class="alert alert-warning text-center" style="display:inline-block">
+                {{ session('warning') }}
+            </div>
+        @endif
     </div>
     <script>
     $(".alert-success").delay(4000).slideUp(400, function() {

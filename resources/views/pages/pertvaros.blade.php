@@ -34,7 +34,7 @@
     <div class="card-block">
         <div class="table-responsive">
             @if(count($pertvaros) > 0)
-            <table class="table table-bordered table-hover auto" id="pertvaros_table">
+            <table class="table table-bordered table-striped table-hover auto" id="pertvaros_table">
                 
                 <thead class="thead-dark">
                     <tr>
@@ -67,20 +67,86 @@
                                 <!--@can('elements', \App\Pertvara::class)
                                     <td class="text-center"><input type="checkbox" name="ids[]" class="selectbox" value="{{ $pertvara->id }}"></td>
                                 @endcan-->
-                                <td style="width: 200px !important;">{{ $pertvara->patalpa->pastatas->pavadinimas }}</td>
-                                <td>{{ $pertvara->patalpa->aukstas }}</td>
-                                <td>{{ $pertvara->patalpa->nr }}</td>
-                                <td style="width: 150px;">{{ $pertvara->tipas }}</td>
-                                <td style="width: 160px;">{{ $pertvara->pavadinimas }}</td>
-                                <td>{{ $pertvara->nr }}</td>
-                                <td>{{ $pertvara->talpa }}</td>
-                                <td style="width: 160px;">{{ $pertvara->atsakingas ?? 'Darth Vader' }}</td>
+                                <td style="width: 200px !important;">{{ $pertvara->patalpa->pastatas->pavadinimas ?? '-'}}</td>
+                                <td>{{ $pertvara->patalpa->aukstas ?? '-'}}</td>
+                                <td>{{ $pertvara->patalpa->nr ?? '-'}}</td>
+                                <td style="width: 150px;">
+                                    @switch($pertvara->tipas)
+                                        @case('PD0201')
+                                            Administracinė
+                                            @break
+                                        @case('PD0202')
+                                            Auditorija
+                                            @break
+                                        @case('PD0208')
+                                            Bendro Naudojimo
+                                            @break
+                                        @case('PD0209') 
+                                            Darbininkų  
+                                            @break
+                                        @case('PD0210')
+                                            Infrastruktūros
+                                            @break
+                                        @case('PD0211')
+                                            Kambarys
+                                            @break
+                                        @case('PD0203')
+                                            Kompiuterių klasė
+                                            @break
+                                        @case('PD0205')
+                                            Konferencijų salė
+                                            @break
+                                        @case('PD0204')
+                                            Laboratorija
+                                            @break
+                                        @case('PD0212')
+                                            Pagalbinė
+                                            @break
+                                        @case('PD0206')
+                                            Salė
+                                            @break
+                                        @case('PD0214')
+                                            San. Mazgas
+                                            @break
+                                        @case('PD0207')
+                                            Sandėlis
+                                            @break
+                                        @case('PD0213')
+                                            Techninė
+                                            @break
+                                        @default
+                                            -
+                                    @endswitch
+                                </td>
+                                <td style="width: 160px;">{{ $pertvara->pavadinimas ?? '-'}}</td>
+                                <td>{{ $pertvara->nr ?? '-'}}</td>
+                                <td>{{ $pertvara->talpa ?? '-'}}</td>
+                                <td style="width: 160px;">{{ $pertvara->atsakingas ?? '-' }}</td>
                                 <td>{{ $pertvara->telefonas ?? '-' }}</td>
-                                <td>{{ $pertvara->kvadratura }} m2</td>
-                                <td style="width: 150px;">{{ $pertvara->busena }}</td>
-                                <td style="width: 100px;">{{ \Carbon\Carbon::parse($pertvara->startdate)->format('Y-m-d') }}</td>
+                                <td>{{ $pertvara->kvadratura ?? '-'}} m2</td>
+                                <td style="width: 130px;">
+                                    @switch($pertvara->busena)
+                                        @case('PD0101')
+                                            Aktyvus (-i)
+                                            @break
+                                        @case('PD0102')
+                                            Remontuojamas (-a)
+                                            @break
+                                        @case('PD0103')
+                                            Kraustymas
+                                            @break
+                                        @case('PD0104')
+                                            Panaikintas (-a)
+                                            @break
+                                        @default
+                                            -
+                                    @endswitch
+                                </td> 
+                                <td style="width: 100px;">{{ $date = $pertvara->startdate ? \Carbon\Carbon::parse($pertvara->startdate)->format('Y-m-d') : '-' }}</td>
                                 <td style="width: 100px;">{{ $date = $pertvara->enddate ? \Carbon\Carbon::parse($pertvara->enddate)->format('Y-m-d') : '-' }}</td>
-                                <td style="width: 130px;">{{ $pertvara->updated_at }}<br/>{{ !Auth::user()->permissions->where('permission_id', env("P_REGULAR"))->isEmpty() ? Auth::user()->name : "Admin" }}</td>
+                                <!--<td style="width: 130px;">{{ $pertvara->updated_at ?? '00:00:00'}}<br/>{{ !Auth::user()->permissions->where('permission_id', env("P_REGULAR"))->isEmpty() ? Auth::user()->name : "Admin" }}</td>-->
+                                <td style="width: 150px;">{{ $pertvara->updated_at ?? '0000-00-00 00:00:00'}}<br/>{{ !Auth::user()->permissions->where('permission_id', env("P_REGULAR"))->isEmpty() ? Auth::user()->name : "Admin" }}</td>
+
 
                                 @can('elements', \App\Pertvara::class)
                                     <!-- Form Delete -->

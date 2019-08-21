@@ -42,7 +42,7 @@
                             {{ Form::label('tipas', 'Tipas *') }}<br/>
                         </div>
                         <div class="col-md-6 text-left">
-                        {{Form::select('tipas', ['Administracinė' => 'Administracinė', 'Auditorija' => 'Auditorija', 'Bendro Naudojimo' => 'Bendro Naudojimo', 'Darbininkų' => 'Darbininkų', 'Infrastruktūros' => 'Infrastruktūros', 'Kambarys' => 'Kambarys', 'Kompiuterių klasė' => 'Kompiuterių klasė', 'Konferencijų salė' => 'Konferencijų salė', 'Laboratorija' => 'Laboratorija', 'Pagalbinė' => 'Pagalbinė', 'Salė' => 'Salė', 'San. Mazgas' => 'San. Mazgas', 'Sandėlis' => 'Sandėlis', 'Techninė' => 'Techninė'], null,
+                        {{Form::select('tipas', ['PD0201' => 'Administracinė', 'PD0202' => 'Auditorija', 'PD0208' => 'Bendro Naudojimo', 'PD0209' => 'Darbininkų', 'PD0210' => 'Infrastruktūros', 'PD0211' => 'Kambarys', 'PD0203' => 'Kompiuterių klasė', 'PD0205' => 'Konferencijų salė', 'PD0204' => 'Laboratorija', 'PD0212' => 'Pagalbinė', 'PD0206' => 'Salė', 'PD0214' => 'San. Mazgas', 'PD0207' => 'Sandėlis', 'PD0213' => 'Techninė'], null,
                             [
                                 'class' => 'form-control',
                                 'placeholder' => '-Patalpos tipas-',
@@ -73,7 +73,7 @@
                             {{ Form::label('busena', 'Būsena  *') }}<br/>
                         </div>
                         <div class="col-md-6 text-left">
-                            {{Form::select('busena', ['Aktyvus (-i)' => 'Aktyvus (-i)', 'Remontuojamas (-a)' => 'Remontuojamas (-a)', 'Kraustymas' => 'Kraustymas', 'Panaikintas (-a)' => 'Panaikintas (-a)'], null,
+                            {{Form::select('busena', ['PD0101' => 'Aktyvus (-i)', 'PD0102' => 'Remontuojamas (-a)', 'PD0103' => 'Kraustymas', 'PD0104' => 'Panaikintas (-a)'], null,
                                 [
                                     'class' => 'form-control',
                                     'placeholder' => '-Patalpos Būsena-',

@@ -29,7 +29,7 @@
 
         <footer class="footer">
             <div class="container">
-                <div class="text-right">{{ date('Y-m-d H:i') }}</div>
+                <div class="text-right">{{ Carbon::now('Europe/Vilnius') }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Prisijungė: {{ Auth::user()->name }}</div>
             </div>
         </footer>
         

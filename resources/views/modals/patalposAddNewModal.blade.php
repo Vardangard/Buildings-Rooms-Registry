@@ -38,7 +38,7 @@
                                 {{ Form::label('aukstas', 'Patalpos aukštas') }}<br/>
                             </div>
                             <div class="col-md-6 text-left">
-                                {{ Form::number('aukstas', '1', ['min'=>1,'max'=>16, 'class' => 'form-control', 'placeholder' => 'Aukštas', 'style' => 'width:50%;']) }}<br/>
+                                {{ Form::number('aukstas', '1', ['min'=>0,'max'=>16, 'class' => 'form-control', 'placeholder' => 'Aukštas', 'style' => 'width:50%;']) }}<br/>
                             </div>
                         </div>
                         <div class="row" style="padding-right: 150px;">
@@ -49,14 +49,14 @@
                                 {{ Form::text('nr', '', ['class' => 'form-control', 'placeholder' => 'Patalpos Nr', 'style' => 'margin-bottom: 2px']) }}<br/>
                             </div>
                         </div>
-                        <!--<div class="row" style="padding-right: 150px;">
+                        <div class="row" style="padding-right: 150px;">
                             <div class="col-md-6 text-right">
                                 {{ Form::label('pertvaros', 'Patalpos dalių sk') }}<br/>
                             </div>
                             <div class="col-md-6 text-left">
-                                {{ Form::number('pertvaros', '1',  ['min'=>1,'max'=>16, 'class' => 'form-control', 'placeholder' => 'Patalpos dalių skaičius', 'style' => 'width:50%;']) }}<br/>
+                                {{ Form::number('pertvaros', '1',  ['min'=>0,'max'=>16, 'class' => 'form-control', 'placeholder' => 'Patalpos dalių skaičius', 'style' => 'width:50%;']) }}<br/>
                             </div>
-                        </div>-->
+                        </div>
                     </div>
                 </div>
             </div>

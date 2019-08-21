@@ -21,12 +21,13 @@ class AssignController extends Controller
      */
     public function index()
     {
+        //dd(Auth::user()->pastatai);
         $this->authorize('view', \App\User::class);
 
         //$users = User::orderBy('id', 'desc')->paginate(25);
         $pastatai = Pastatas::pluck('pavadinimas', 'id');
         $users = User::whereHas('permissions', function ($query) {
-            $query->where('permission_id', '=', env('P_REGULAR'));
+            $query->where('permission_id', '=', env('P_ADMIN'));
         })->orderBy('id', 'desc')->paginate(25);
 
         //$user = User::find(30);
@@ -63,7 +64,7 @@ class AssignController extends Controller
         $this->authorize('view', \App\User::class);
 
         $user = User::whereHas('permissions', function ($query) {
-            $query->where('permission_id', '=', env('P_REGULAR'));
+            $query->where('permission_id', '=', env('P_ADMIN'));
         })->find($id);
 
         foreach($user->pastatai as $pastatas)

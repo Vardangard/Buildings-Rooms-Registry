@@ -87,7 +87,7 @@
                                 {{ Form::label('miestas', 'Miestas  *') }}<br/>
                             </div>
                             <div class="col-md-6 text-left">
-                                {{Form::select('miestas',['Kaunas' => 'Kaunas', 'Vilnius' => 'Vilnius', 'Klaipėda' => 'Klaipėda'], null,
+                                {{Form::select('miestas',['KNS' => 'Kaunas', 'VLN' => 'Vilnius', 'KLP' => 'Klaipėda'], null,
                                     [
                                         'class' => 'form-control',
                                         'placeholder' => 'Pasirinkti Miestą',
@@ -102,7 +102,7 @@
                                 {{ Form::label('busena', 'Būsena  *') }}<br/>
                             </div>
                             <div class="col-md-6 text-left">
-                                {{Form::select('busena',['Aktyvus (-i)' => 'Aktyvus (-i)', 'Remontuojamas (-a)' => 'Remontuojamas (-a)', 'Kraustymas' => 'Kraustymas', 'Panaikintas (-a)' => 'Panaikintas (-a)'], null,
+                                {{Form::select('busena',['PD0101' => 'Aktyvus (-i)', 'PD0102' => 'Remontuojamas (-a)', 'PD0103' => 'Kraustymas', 'PD0104' => 'Panaikintas (-a)'], null,
                                 [
                                     'class' => 'form-control',
                                     'placeholder' => 'Pasirinkti Būsena',

@@ -128,8 +128,8 @@ return [
     */
 
     'custom' => [
-        'kadastronr' => [ 'required' => 'Neįvestas kadastro numeris.', 'max' => 'Kadastro Nr. turi būti ne daugiau 30 simbolių.'],
-        'kodas' => [ 'required' => 'Neįvestas kodas.', 'max' => 'Kodas turi būti ne daugiau 10 simbolių.'],
+        'kadastronr' => [ 'required' => 'Neįvestas kadastro numeris.', 'max' => 'Kadastro Nr. turi būti ne daugiau 30 simbolių.', 'unique' => 'Pastatas su panašiu pavadinimu, kodu arba kadastriniu numeriu jau egzistuoja'],
+        'kodas' => [ 'required' => 'Neįvestas kodas.', 'max' => 'Kodas turi būti ne daugiau 10 simbolių.', 'unique' => 'Pastatas su panašiu pavadinimu, kodu arba kadastriniu numeriu jau egzistuoja'],
         'pavadinimas' => [ 'required' => 'Neįvestas pastato pavadinimas.', 'max' => 'Pavadinimas turi būti ne daugiau 150 simbolių.'],
         'adresas' => [ 'required' => 'Neįvestas adresas.', 'max' => 'Adresas turi būti ne daugiau 50 simbolių.'],
         'aukstai' => [ 'required' => 'Neįvestas pastato aukštų skaičius.', ],

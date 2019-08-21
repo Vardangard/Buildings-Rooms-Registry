@@ -30,7 +30,7 @@ class PertvarosController extends Controller
         $pastatu_patalpos = Patalpa::with('pastatas')->get()->pluck('pastatas.pavadinimas', 'patalpa.id')->unique();
         $plnr = Patalpa::pluck('nr', 'nr');
         $numeris = Pertvara::pluck('nr', 'nr');
-        $pertvaros = Pertvara::orderBy('updated_at', 'desc')->get();
+        $pertvaros = Pertvara::orderBy('nr', 'desc')->get(); //$pertvaros = Pertvara::orderBy('updated_at', 'desc')->get(); !INCASE OF ABORT!\\
         return view('pages.pertvaros', compact('pertvaros', 'pastatai', 'plnr', 'numeris'));
     }
 
@@ -42,8 +42,8 @@ class PertvarosController extends Controller
     public function create()
     {
         $this->authorize('create', \App\Pertvara::class);
-        $patalpos = DB::table('patalpas as pl')
-        ->join('pastatas as pt', 'pt.id', '=', 'pl.pastatai_id')
+        $patalpos = DB::table('luadm.pp_patalpos as pl')
+        ->join('luadm.pp_pastatai as pt', 'pt.id', '=', 'pl.pastatai_id')
         ->select(DB::raw("pl.id, (pt.pavadinimas || ', ' || pl.nr || ', ' || pl.aukstas ||' aukštas') as patalpa"))
         ->orderBy('patalpa','asc')
         ->pluck('patalpa','pl.id');
@@ -61,52 +61,64 @@ class PertvarosController extends Controller
     {
         $this->validate($request, [
             'patalpos_id' => 'required',
-            'kvadratura' => 'required|max:6',
-            'talpa' => 'required|max:8',
+            'kvadratura' => 'max:6',
+            'talpa' => 'max:8',
             'tipas' => 'required|max:30',
-            'startdate' => 'required|date|before_or_equal:today',
+            'startdate' => 'date|before_or_equal:today|nullable',
             'enddate' => 'date|after_or_equal:startdate|nullable',
             'busena' => 'required',
-            'pavadinimas' => 'required|max:150',
+            'pavadinimas' => 'max:150',
         ]);
 
-        try{
-
-        $pertvara = new Pertvara;
-        $pertvara->patalpos_id = $request->input('patalpos_id');
-        $pertvara->kvadratura = $request->input('kvadratura');
-        $pertvara->talpa = $request->input('talpa');
-        $pertvara->tipas = $request->input('tipas');
-        $pertvara->nr = $request->input('pnr');
-        $pertvara->startdate = $request->input('startdate');
-        $pertvara->enddate = $request->input('enddate');
-        $pertvara->telefonas = $request->input('telefonas');
-        $pertvara->faksas = $request->input('faksas');
-        $pertvara->busena = $request->input('busena');
-        $pertvara->atsakingas = $request->input('atsakingas');
-        $pertvara->multimedia = $request->input('multimedia');
-        $pertvara->pc = $request->input('pc');
-        $pertvara->stalas = $request->input('stalas');
-        $pertvara->uztamsinimas = $request->input('uztamsinimas');
-        $pertvara->garsas = $request->input('garsas');
-        $pertvara->ekranas = $request->input('ekranas');
-        $pertvara->internetas = $request->input('internetas');
-        $pertvara->pavadinimas = $request->input('pavadinimas');
-        $pertvara->projektinis = $request->input('projektinis');
-        $pertvara->kondicionierius = $request->input('kondicionierius');
-        $pertvara->ekr_dydis = $request->input('ekr_dydis');
-        $pertvara->save();
-        $patalpa = Patalpa::find($pertvara->patalpos_id);
-        $patalpa->pertvaros = $patalpa->pertvaros + 1;
-        $patalpa->save();
-
-        } catch(\Illuminate\Database\QueryException $ex)
+        $patalpa = Patalpa::find($request->input('patalpos_id'));
+        if($patalpa->pertvaros > \App\Pertvara::where('patalpos_id', '=', $patalpa->id)->count())
         {
-            return back()->withError($pertvara->patalpa->nr.' patalpoje '.$request->input('pnr').' patalpos dalis jau egzistuoja');
+            try{
+
+            $pertvara = new Pertvara;
+            $pertvara->patalpos_id = $request->input('patalpos_id');
+            $pertvara->kvadratura = $request->input('kvadratura');
+            $pertvara->talpa = $request->input('talpa');
+            $pertvara->tipas = $request->input('tipas');
+            $pertvara->nr = $request->input('pnr');
+            $pertvara->startdate = $request->input('startdate');
+            $pertvara->enddate = $request->input('enddate');
+            $pertvara->telefonas = $request->input('telefonas');
+            $pertvara->faksas = $request->input('faksas');
+            $pertvara->busena = $request->input('busena');
+            $pertvara->atsakingas = $request->input('atsakingas');
+            $pertvara->multimedia = $request->input('multimedia');
+            $pertvara->pc = $request->input('pc');
+            $pertvara->stalas = $request->input('stalas');
+            $pertvara->uztamsinimas = $request->input('uztamsinimas');
+            $pertvara->garsas = $request->input('garsas');
+            $pertvara->ekranas = $request->input('ekranas');
+            $pertvara->internetas = $request->input('internetas');
+            $pertvara->pavadinimas = $request->input('pavadinimas');
+            $pertvara->projektinis = $request->input('projektinis');
+            $pertvara->kondicionierius = $request->input('kondicionierius');
+            $pertvara->screen_size = $request->input('ekr_dydis');
+            $pertvara->save();
+
+            } 
+            catch(\Illuminate\Database\QueryException $ex)
+            {
+                return back()->withError($pertvara->patalpa->nr.' patalpoje '.$request->input('pnr').' patalpos dalis jau egzistuoja');
+                //return back()->withError($ex);
+            }
+            catch(\Yajra\Pdo\Oci8\Exceptions\Oci8Exception $ex)
+            {
+                return back()->withError($pertvara->patalpa->nr.' patalpoje '.$request->input('pnr').' patalpos dalis jau egzistuoja');
+                //return back()->withError($ex);
+            }
+
+
+            return redirect('/pertvaros')->with('success', 'Patalpos dalis sėkmingai pridėta');
         }
+        else
+            return redirect('/pertvaros')->with('warning', 'Negalima įrašyti daugiau pertvarų negu nurodyta patalpoje');
 
 
-        return redirect('/pertvaros')->with('success', 'Patalpos dalis sėkmingai pridėta');
     }
 
     /**
@@ -132,8 +144,8 @@ class PertvarosController extends Controller
 
         $this->authorize('update', $pertvara);
 
-        $patalpos = DB::table('patalpas as pl')
-        ->join('pastatas as pt', 'pt.id', '=', 'pl.pastatai_id')
+        $patalpos = DB::table('luadm.pp_patalpos as pl')
+        ->join('luadm.pp_pastatai as pt', 'pt.id', '=', 'pl.pastatai_id')
         ->select(DB::raw("pl.id, pt.pavadinimas || ', ' || pl.nr || ', ' || pl.aukstas ||' aukštas' as patalpa"))
         ->orderBy('patalpa','asc')
         ->pluck('patalpa','pl.id');
@@ -152,15 +164,16 @@ class PertvarosController extends Controller
     {
         $this->validate($request, [
             'patalpos_id' => 'required',
-            'kvadratura' => 'required|max:6',
-            'talpa' => 'required|max:8',
+            'kvadratura' => 'max:6',
+            'talpa' => 'max:8',
             'tipas' => 'required|max:30',
-            'startdate' => 'required|date|before_or_equal:today',
+            'startdate' => 'date|before_or_equal:today|nullable',
             'enddate' => 'date|after_or_equal:startdate|nullable',
             'busena' => 'required',
-            'pavadinimas' => 'required|max:150',
+            'pavadinimas' => 'max:150',
         ]);
 
+        try {
 
         $pertvara = Pertvara::find($id);
         $pertvara->patalpos_id = $request->input('patalpos_id');
@@ -184,10 +197,21 @@ class PertvarosController extends Controller
         $pertvara->pavadinimas = $request->input('pavadinimas');
         $pertvara->projektinis = $request->input('projektinis');
         $pertvara->kondicionierius = $request->input('kondicionierius');
-        $pertvara->ekr_dydis = $request->input('ekr_dydis');
+        $pertvara->screen_size = $request->input('ekr_dydis');
         $pertvara->save();
 
-     
+        } 
+        catch(\Illuminate\Database\QueryException $ex)
+        {
+            return back()->withError($pertvara->patalpa->nr.' patalpoje '.$request->input('pnr').' patalpos dalis jau egzistuoja');
+            //return back()->withError($ex);
+        }
+        catch(\Yajra\Pdo\Oci8\Exceptions\Oci8Exception $ex)
+        {
+            return back()->withError($pertvara->patalpa->nr.' patalpoje '.$request->input('pnr').' patalpos dalis jau egzistuoja');
+            //return back()->withError($ex);
+        }
+        
 
         return redirect('/pertvaros')->with('success', 'Patalpos dalis sėkmingai redaguota');
     }
@@ -204,15 +228,12 @@ class PertvarosController extends Controller
 
         $this->authorize('delete', $pertvara);
 
-        $patalpa = Patalpa::find($pertvara->patalpos_id);
-        $patalpa->pertvaros = $patalpa->pertvaros - 1;
-        $patalpa->save();
         $pertvara->delete();
         
         return redirect('/pertvaros')->with('success', 'Patalpos dalis ištrinta');
     }
 
-    public function deleteAll(Request $request) 
+    /*public function deleteAll(Request $request) 
     {
         $ids = $request->get('ids');
         if($ids != null)
@@ -231,7 +252,7 @@ class PertvarosController extends Controller
         Pertvara::destroy($ids);
 
         return redirect('/pertvaros')->with('success', 'Ištrintos pasirinktos patalpų dalys');
-    }
+    } */
 
     public function search(Request $request) 
     {
@@ -255,12 +276,11 @@ class PertvarosController extends Controller
         $busena = $request->get('busena');
         $multimedia = $request->get('multimedia');
         $pc = $request->get('pc');
-        $irmv = $request->get('irmv');
         $uztamsinimas = $request->get('uztamsinimas');
         $garsas = $request->get('garsas');
         $stalas = $request->get('stalas');
         $ekranas = $request->get('ekranas');
-        $ekr_dydis = $request->get('ekr_dydis');
+        $screen_size = $request->get('ekr_dydis');
         $internetas = $request->get('internetas');
         $kondicionierius = $request->get('kondicionierius');
 
@@ -280,8 +300,8 @@ class PertvarosController extends Controller
             }  
         })
         ->where(function ($query) use ($tipas, $pertvarosNr, $talpa,
-                                            $kvadratura, $busena, $multimedia, $pc, $irmv, $uztamsinimas, $garsas, 
-                                            $stalas, $ekranas, $ekr_dydis, $internetas, $kondicionierius) 
+                                            $kvadratura, $busena, $multimedia, $pc, $uztamsinimas, $garsas, 
+                                            $stalas, $ekranas, $screen_size, $internetas, $kondicionierius) 
         {
             if(!empty($tipas)) {
                 $query->where('tipas', 'like', '%'.$tipas.'%');
@@ -303,10 +323,7 @@ class PertvarosController extends Controller
             }  
             if($pc  != 0) {
                 $query->whereNotNull('pc');
-            }   
-            if($irmv != 0) {
-                $query->whereNotNull('irmv');
-            }   
+            }      
             if($uztamsinimas != 0) {
                 $query->whereNotNull('uztamsinimas');
             }  
@@ -319,8 +336,8 @@ class PertvarosController extends Controller
             if($ekranas != 0) {
                 $query->whereNotNull('ekranas');
             }  
-            if($ekr_dydis != 0) {
-                $query->whereNotNull('ekr_dydis');
+            if($screen_size != 0) {
+                $query->whereNotNull('screen_size');
             }  
             if($internetas != 0) {
                 $query->whereNotNull('internetas'); 

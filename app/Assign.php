@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Assign extends Model
 {
-    protected $connection = 'tvarkis';
+    protected $connection = 'luadm';
     
     protected $table = 'assign';
 }

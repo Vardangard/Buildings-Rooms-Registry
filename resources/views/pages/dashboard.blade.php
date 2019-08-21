@@ -10,8 +10,14 @@
                 <a class="card-link" href="/pastatai">Pastatų administravimas</a>
                 <a class="card-link" href="/patalpos">Patalpų administravimas</a>
                 <a class="card-link" href="/pertvaros">Pertvarų administravimas</a>
+                <a class="card-link" href="/vartotojai">Vartotojai</a>
             </div>
         </div>
+    </div>
+</div>
+<div class="row" style="margin-top:200px;">
+    <div class="col-md-12 d-flex justify-content-center">
+        @include('inc.wellcome')
     </div>
 </div>
 

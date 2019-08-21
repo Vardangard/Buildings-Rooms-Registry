@@ -6,7 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Patalpa extends Model
 {
-    public $table = "patalpas";
+    protected $connection = 'luadm';
+    
+    protected $table = 'pp_patalpos'; //protected $table = 'patalpas'; !INCASE OF ABORT!\\
+
+    protected $primaryKey = 'id';
 
     public function pastatas()
     {

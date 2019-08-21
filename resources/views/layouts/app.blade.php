@@ -30,7 +30,7 @@
         <div class="col-sm-12 col-md-9 col-login">
             <div class="row">
                 <div class="col-md-12 text-center">
-                    <h2 class="title">Projektai</h2>
+                    <h2 class="title">Pastatų-patalpų registras</h2>
                 </div>
             </div>
             <div class="row">
